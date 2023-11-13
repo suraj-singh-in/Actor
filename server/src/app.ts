@@ -5,6 +5,10 @@ import cluster from "cluster";
 import process from "process";
 import rTracer from "cls-rtracer";
 
+require("./config/DBConfig");
+require("./config/DBSchemas");
+
+
 // Import the main router from the specified file
 import MasterRouter from "./controller/MasterRouter";
 

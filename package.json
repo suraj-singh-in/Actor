@@ -5,9 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "npm run start:dev --prefix server",
-    "client": "npm run start:dev --prefix client",
-    "start:dev": "concurrently \"npm run server\" \"npm run client\""
+    "server:dev": "npm run start:dev --prefix server",
+    "client:dev": "npm run start:dev --prefix client",
+    "start:dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:qa": "npm run start:qa --prefix server",
+    "client:qa": "npm run start:qa --prefix client",
+    "start:qa": "concurrently \"npm run server:qa\" \"npm run client:qa\"",
+    "server:staging": "npm run start:staging --prefix server",
+    "client:staging": "npm run start:staging --prefix client",
+    "start:staging": "concurrently \"npm run server:staging\" \"npm run client:staging\"",
+    "server:prod": "npm run start:prod --prefix server",
+    "client:prod": "npm run start:prod --prefix client",
+    "start:prod": "concurrently \"npm run server:prod\" \"npm run client:prod\""
   },
   "keywords": [],
   "author": "",

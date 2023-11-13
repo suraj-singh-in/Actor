@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
+import logger from "../config/Logger";
 
 class HealthController {
   public _router = Router();
@@ -15,6 +16,7 @@ class HealthController {
     this._router.get(
       "/health",
       (req: Request, res: Response, next: NextFunction) => {
+        logger.info("Health Checked");
         res.status(200).json({ status: "OK 200" });
       }
     );

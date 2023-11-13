@@ -1,13 +1,14 @@
 // Import necessary modules and libraries
 import express, { Request, Response, NextFunction } from "express";
 import { JsonParser, ObjectMapper } from "jackson-js";
-import cluster from "cluster";
+
 import process from "process";
 import rTracer from "cls-rtracer";
 
 require("./config/DBConfig");
 require("./config/DBSchemas");
 
+import logger from "./config/Logger";
 
 // Import the main router from the specified file
 import MasterRouter from "./controller/MasterRouter";
@@ -27,7 +28,7 @@ export class Server {
 
 // Create an instance of the Server class
 const server = new Server();
-console.log("Server Launched at:", process.pid);
+logger.info("Server Launched at:", process.pid);
 
 // Set up middleware for parsing incoming requests
 server.app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
@@ -41,7 +42,7 @@ server.app.use("/", server.router);
 // Error handling middleware for unhandled errors
 server.app.use(
   (error: unknown, req: Request, res: Response, next: NextFunction) => {
-    console.log("🚀 ~ file: app.ts:30 ~ server.app.use ~ error:", error);
+    logger.error("🚀 ~ file: app.ts:30 ~ server.app.use ~ error:", error);
     res
       .status(500)
       .header("Content-Type", "application/json")
@@ -63,10 +64,10 @@ server.app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Event listener for unhandled promise rejections
 process.on("unhandledRejection", (reason, promise) => {
-  console.log("Unhandled Rejection at: , ", promise, "reason", reason);
+  logger.error("Unhandled Rejection at: , ", promise, "reason", reason);
 });
 
 // start the server on the specified port
 server.app.listen(process.env.APP_PORT || 8080, () => {
-  console.log("Server Initialized at :", process.env.APP_PORT || 8080);
+  logger.info("Server Initialized at :", process.env.APP_PORT || 8080);
 });

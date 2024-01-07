@@ -1,7 +1,15 @@
-import { Typography } from "antd";
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const { Title } = Typography;
+const Home = () => {
+  const { push } = useRouter();
 
-export default function Home() {
-  return <Title>Actor</Title>;
-}
+  useEffect(() => {
+    push("/login");
+  }, []);
+
+  return <p></p>;
+};
+
+export default Home;

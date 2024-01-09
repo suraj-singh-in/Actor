@@ -12,6 +12,7 @@ import logger from "./config/Logger";
 
 // Import the main router from the specified file
 import MasterRouter from "./controller/MasterRouter";
+import { loggerString } from "./utils/helperMethods";
 
 // Create an instance of ObjectMapper for JSON handling
 export const objectMapper = new ObjectMapper();
@@ -28,7 +29,7 @@ export class Server {
 
 // Create an instance of the Server class
 const server = new Server();
-logger.info("Server Launched at:", process.pid);
+logger.info(loggerString("Server Launched at", process.pid));
 
 // Set up middleware for parsing incoming requests
 server.app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
@@ -42,7 +43,7 @@ server.app.use("/", server.router);
 // Error handling middleware for unhandled errors
 server.app.use(
   (error: unknown, req: Request, res: Response, next: NextFunction) => {
-    logger.error("🚀 ~ file: app.ts:30 ~ server.app.use ~ error:", error);
+    logger.error(loggerString("🚀 error", error));
     res
       .status(500)
       .header("Content-Type", "application/json")
@@ -64,10 +65,14 @@ server.app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Event listener for unhandled promise rejections
 process.on("unhandledRejection", (reason, promise) => {
-  logger.error("Unhandled Rejection at: , ", promise, "reason", reason);
+  logger.error(
+    loggerString("Unhandled Rejection at: ", promise, "reason", reason)
+  );
 });
 
 // start the server on the specified port
 server.app.listen(process.env.APP_PORT || 8080, () => {
-  logger.info("Server Initialized at :", process.env.APP_PORT || 8080);
+  logger.info(
+    loggerString("Server Initialized at ", process.env.APP_PORT || 8080)
+  );
 });

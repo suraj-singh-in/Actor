@@ -8,8 +8,8 @@ const logFormat = format.combine(
   format.printf((info) => {
     let rid = rTracer.id();
     return rid
-      ? `[${info.timestamp} ${info.level}: [request-id: ${rid}] : ${info.message}]`
-      : `[${info.timestamp} ${info.level} : ${info.message}]`;
+      ? `[${info.timestamp} ${info.level}: [request-id: ${rid}] : ${info.message}`
+      : `[${info.timestamp} ${info.level}] : ${info.message}`;
   })
 );
 

@@ -14,7 +14,7 @@ class MasterRouter {
   }
 
   private _configure() {
-    this._router.use("/", this.healthController);
+    this._router.use("/configs", this.healthController);
   }
 }
 

@@ -11,7 +11,7 @@ require("./config/DBSchemas");
 import logger from "./config/Logger";
 
 // Import the main router from the specified file
-import MasterRouter from "./controller/MasterRouter";
+import MasterRouter from "./routers/MasterRouter";
 import { loggerString } from "./utils/helperMethods";
 
 // Create an instance of ObjectMapper for JSON handling

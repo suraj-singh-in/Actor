@@ -25,6 +25,7 @@ export const mockRouteEndpoints = {
 export const ActsRouteEndpoints = {
   GET_ALL_ACTS: "/getAllActs",
   CREATE_ACT: "/create",
+  CHANGE_ACTIVE_VERSE: "/changeActiveVerse",
 };
 
 /**

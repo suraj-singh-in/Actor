@@ -8,7 +8,7 @@ import {
   BAD_REQUEST_ERROR,
   genericActError,
 } from "../constants/errorResponeMapping";
-import verseModal from "../schema/Verse";
+import VerseModal from "../schema/Verse";
 import TheaterModel from "../schema/Theater";
 
 export const getAllActs = async (
@@ -81,7 +81,7 @@ export const createAct = async (
     }));
 
     // create all Verse
-    await verseModal.create(formmatedVerses);
+    await VerseModal.create(formmatedVerses);
 
     //  sending success response
     res.status(200).json(
@@ -95,6 +95,57 @@ export const createAct = async (
 
     // check for cast error
     if (error.name === "ValidationError") {
+      res.status(500).json(new ErrorResponse(genericActError(error.message)));
+    }
+
+    // responsing with generic error
+    res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
+  }
+};
+
+export const changeActiveVerse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Getting body
+    const { actId, verseId } = req.body;
+
+    // check if the act exist
+    const act = await ActModel.findById(actId);
+
+    if (!act) {
+      res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // check if verse exist
+    const verse = await VerseModal.findById(verseId);
+
+    if (!verse) {
+      res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // Deactivate all verse for the Act except the specified one
+    await VerseModal.updateMany(
+      { _id: { $ne: verseId }, actId },
+      { $set: { isActive: false } }
+    );
+
+    // Activate the specified verse
+    await VerseModal.findByIdAndUpdate(verseId, { $set: { isActive: true } });
+
+    res.status(200).json(
+      new SuccessResponse({
+        message: `Active Verse of ${act.name} changed to ${verse.name}`,
+      })
+    );
+  } catch (error) {
+    // logging error in case
+    logger.error(loggerString("Error While Changing active verse", error));
+
+    // check for cast error
+    if (error.name === "CastError") {
       res.status(500).json(new ErrorResponse(genericActError(error.message)));
     }
 

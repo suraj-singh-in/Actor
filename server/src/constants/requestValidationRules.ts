@@ -1,0 +1,27 @@
+import { ValidationRules, validationRulesMap } from "../utils/typeDefinations";
+
+/**
+ * Represents the validation rules for creating a theater request.
+ * @typedef {Object} CreateTheaterRequestRule
+ * @property {string} name - The required string property for the theater name.
+ * @property {string} logo - The optional string property for the theater logo.
+ * @property {string[]} permissions - The optional array property for theater permissions.
+ * @property {string} permissions.* - Each item in the permissions array is a required string.
+ */
+const createTheaterRequestRule: ValidationRules = {
+  name: "required|string",
+  logo: "string",
+  permissions: "array",
+  "permissions.*": "string|required",
+};
+
+/**
+ * Represents a collection of theater validation rules.
+ * @typedef {Object} TheaterValidationRule
+ * @property {CreateTheaterRequestRule} createTheaterRequestRule - The validation rules for creating a theater.
+ */
+const TheaterValidationRule: validationRulesMap = {
+  createTheaterRequestRule: createTheaterRequestRule,
+};
+
+export { TheaterValidationRule };

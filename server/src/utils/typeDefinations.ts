@@ -13,3 +13,11 @@ export type successResponseType = {
 export type ErrorMap = {
   [key: string]: ErrorResponseType;
 };
+
+export type ValidationRules = {
+  [key: string]: string;
+};
+
+export type validationRulesMap = {
+  [key: string]: ValidationRules;
+};

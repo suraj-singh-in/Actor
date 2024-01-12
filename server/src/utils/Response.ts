@@ -4,11 +4,16 @@ class ErrorResponse {
   private statusCode: number;
   private errorCode: string;
   private errorMessage: string;
+  private data: any;
 
-  constructor({ statusCode, errorCode, errorMessage }: ErrorResponseType) {
+  constructor(
+    { statusCode, errorCode, errorMessage }: ErrorResponseType,
+    data?: any
+  ) {
     this.statusCode = statusCode ? statusCode : 500;
     this.errorCode = errorCode;
     this.errorMessage = errorMessage;
+    this.data = data;
   }
 }
 

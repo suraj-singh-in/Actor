@@ -13,12 +13,12 @@ export interface ActDocument extends Document {
 const actSchema = new Schema<ActDocument>({
   name: { type: String, required: true },
   endPoint: { type: String, required: true },
-  theaterId: [{ type: Schema.Types.ObjectId, ref: "Book" }],
+  theaterId: [{ type: Schema.Types.ObjectId, ref: "Theater" }],
   method: { type: String, required: true },
 });
 
 // Create a compound unique index
-actSchema.index({ name: 1, theaterId: 1, endPoint: 1 }, { unique: true });
+actSchema.index({ name: 1, endPoint: 1, theaterId: 1, method: 1 }, { unique: true });
 
 // Create and export the model
 const ActModel = model<ActDocument>("Act", actSchema);

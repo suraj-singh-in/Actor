@@ -1,6 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { ErrorResponse } from "./Response";
-import { BAD_REQUEST_ERROR } from "../constants/errorResponeMapping";
+import {
+  BAD_REQUEST_ERROR,
+  INTERNAL_SERVER_ERROR,
+} from "../constants/errorResponeMapping";
 import logger from "../config/Logger";
 import { ValidationRules } from "./typeDefinations";
 
@@ -42,5 +45,8 @@ export const postRequestValidator =
       });
     } catch (error) {
       logger.error(loggerString("Request validation failed", error));
+
+      // on fail send generic error
+      res.status(412).send(new ErrorResponse(INTERNAL_SERVER_ERROR));
     }
   };

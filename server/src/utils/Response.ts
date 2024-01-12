@@ -13,12 +13,12 @@ class ErrorResponse {
 }
 
 class SuccessResponse {
-  private statusCode: number;
+  private statusCode: string | number;
   private data: any;
   private message: string;
 
   constructor({ statusCode, data, message }: successResponseType) {
-    this.statusCode = statusCode ? statusCode : 200;
+    this.statusCode = statusCode ? statusCode : "ACTOR-000";
     this.data = data;
     this.message = message;
   }

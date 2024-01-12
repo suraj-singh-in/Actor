@@ -5,7 +5,7 @@ export type ErrorResponseType = {
 };
 
 export type successResponseType = {
-  statusCode?: number;
+  statusCode?: string | number;
   message?: string;
   data?: any;
 };

@@ -15,9 +15,11 @@ export const MasterRouterRouteMap = {
  * Defines the route endpoints for the Acts Router.
  * @typedef {Object} ActsRouteEndpoints
  * @property {string} GET_ALL_ACTS - The route path for retrieving all acts.
+ * @property {string} CREATE_ACT - The route path for creating a act.
  */
 export const ActsRouteEndpoints = {
   GET_ALL_ACTS: "/getAllActs",
+  CREATE_ACT: "/create",
 };
 
 /**

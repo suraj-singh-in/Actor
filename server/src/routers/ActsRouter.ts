@@ -1,6 +1,8 @@
 import { Router } from "express";
-import { getAllActs } from "../controllers/ActsController";
+import { createAct, getAllActs } from "../controllers/ActsController";
 import { ActsRouteEndpoints } from "../config/constants";
+import { postRequestValidator } from "../utils/helperMethods";
+import { ActValidationRule } from "../constants/requestValidationRules";
 
 class ActsRouter {
   public _router = Router();
@@ -14,6 +16,11 @@ class ActsRouter {
   }
 
   private _configure() {
+    this._router.post(
+      ActsRouteEndpoints.CREATE_ACT,
+      postRequestValidator(ActValidationRule.createActRequestRule),
+      createAct
+    );
     this._router.get(ActsRouteEndpoints.GET_ALL_ACTS, getAllActs);
   }
 }

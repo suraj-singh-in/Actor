@@ -15,6 +15,12 @@ const createTheaterRequestRule: ValidationRules = {
   "permissions.*": "string|required",
 };
 
+const createActRequestRule: ValidationRules = {
+  name: "required|string",
+  endPoint: "required|string",
+  theaterId: "required|string",
+};
+
 /**
  * Represents a collection of theater validation rules.
  * @typedef {Object} TheaterValidationRule
@@ -24,4 +30,8 @@ const TheaterValidationRule: validationRulesMap = {
   createTheaterRequestRule: createTheaterRequestRule,
 };
 
-export { TheaterValidationRule };
+const ActValidationRule: validationRulesMap = {
+  createActRequestRule: createActRequestRule,
+};
+
+export { TheaterValidationRule, ActValidationRule };

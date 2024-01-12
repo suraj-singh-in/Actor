@@ -1,4 +1,4 @@
-import { ErrorResponseType } from "../utils/typeDefinations";
+import { ErrorMap, ErrorResponseType } from "../utils/typeDefinations";
 
 /**
  * Represents an internal server error response.
@@ -24,4 +24,22 @@ export const BAD_REQUEST_ERROR: ErrorResponseType = {
   statusCode: 500,
   errorCode: "ERROR-0002",
   errorMessage: "Bad Request",
+};
+
+const CREATE_ACT_ERROR = {
+  statusCode: 500,
+  errorCode: "ACT-ERROR-0002",
+  errorMessage: "Error while creating an Act",
+};
+
+export const ACTS_ERROR: ErrorMap = {
+  CREATE_ACT_ERROR: CREATE_ACT_ERROR,
+};
+
+export const genericActError = (errorMessage: string): ErrorResponseType => {
+  return {
+    statusCode: 500,
+    errorCode: "ACT-ERROR-0001",
+    errorMessage: errorMessage,
+  };
 };

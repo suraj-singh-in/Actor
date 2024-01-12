@@ -9,6 +9,11 @@ export const MasterRouterRouteMap = {
   CONFIG_ROUTE: "/configs",
   ACTS_ROUTE: "/acts",
   THEATER_ROUTE: "/theater",
+  MOCK_ROUTE: "/actor",
+};
+
+export const mockRouteEndpoints = {
+  MOCK: "/mock/:projectName/:actRoute(*)",
 };
 
 /**

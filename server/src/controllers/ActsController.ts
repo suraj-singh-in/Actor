@@ -5,10 +5,11 @@ import { loggerString } from "../utils/helperMethods";
 import logger from "../config/Logger";
 import {
   ACTS_ERROR,
-  INTERNAL_SERVER_ERROR,
+  BAD_REQUEST_ERROR,
   genericActError,
 } from "../constants/errorResponeMapping";
 import verseModal from "../schema/Verse";
+import TheaterModel from "../schema/Theater";
 
 export const getAllActs = async (
   req: Request,
@@ -31,6 +32,14 @@ export const createAct = async (
   try {
     // Getting body
     const newActData = req.body;
+
+    // get theater from theater id
+    const theater = await TheaterModel.findOne({ _id: newActData.theaterId });
+
+    // if theater does note exist
+    if (!theater) {
+      return res.status(400).json(BAD_REQUEST_ERROR);
+    }
 
     // Check if already exiting act
     const existingAct = await ActModel.findOne({
@@ -66,12 +75,10 @@ export const createAct = async (
     let newActId = newAct["_id"];
 
     // create all verse
-    const formmatedVerses = allVerses.map(({ isActive, ...rest }) => ({
+    const formmatedVerses = allVerses.map(({ ...rest }) => ({
       actId: newActId,
       ...rest,
     }));
-
-    console.log("🚀 ~ formmatedVerses ~ formmatedVerses:", formmatedVerses);
 
     // create all Verse
     await verseModal.create(formmatedVerses);
@@ -83,7 +90,6 @@ export const createAct = async (
       })
     );
   } catch (error) {
-    console.log("🚀 ~ error:", error)
     // logging error in case
     logger.error(loggerString("Error While Creating Act", error));
 

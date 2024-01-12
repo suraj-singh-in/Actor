@@ -13,7 +13,7 @@ export interface ActDocument extends Document {
 const actSchema = new Schema<ActDocument>({
   name: { type: String, required: true },
   endPoint: { type: String, required: true },
-  theaterId: [{ type: Schema.Types.ObjectId, ref: "Theater" }],
+  theaterId: { type: Schema.Types.ObjectId, ref: "Theater" },
   method: { type: String, required: true },
 });
 

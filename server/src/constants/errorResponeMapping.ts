@@ -32,8 +32,22 @@ const CREATE_ACT_ERROR = {
   errorMessage: "Error while creating an Act",
 };
 
+const ACT_ALREADY_EXISTS_ERROR = {
+  statusCode: 500,
+  errorCode: "ACT-ERROR-0003",
+  errorMessage: "Act Already Exists",
+};
+
+const MORE_THAN_ONE_ACTIVE_VERSE_ERROR = {
+  statusCode: 500,
+  errorCode: "ACT-ERROR-0004",
+  errorMessage: "Exactly one Active Verse is allowed",
+};
+
 export const ACTS_ERROR: ErrorMap = {
   CREATE_ACT_ERROR: CREATE_ACT_ERROR,
+  ACT_ALREADY_EXISTS_ERROR: ACT_ALREADY_EXISTS_ERROR,
+  MORE_THAN_ONE_ACTIVE_VERSE_ERROR: MORE_THAN_ONE_ACTIVE_VERSE_ERROR,
 };
 
 export const genericActError = (errorMessage: string): ErrorResponseType => {

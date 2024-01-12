@@ -19,6 +19,13 @@ const createActRequestRule: ValidationRules = {
   name: "required|string",
   endPoint: "required|string",
   theaterId: "required|string",
+  method: "required|string",
+  verses: "required|array",
+  "verses.*.name": "string|required",
+  "verses.*.response": "string|required",
+  "verses.*.httpCode": "required|numeric",
+  "verses.*.responseType": "string|required",
+  "verses.*.isActive": "boolean",
 };
 
 /**

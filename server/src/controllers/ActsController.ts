@@ -28,8 +28,22 @@ export const createAct = async (
   next: NextFunction
 ) => {
   try {
-    // getting body
+    // Getting body
     const newActData = req.body;
+
+    // Check if already exiting act
+    const existingAct = await ActModel.findOne({
+      name: newActData.name,
+      theaterId: newActData.theaterId,
+      method: newActData.method,
+    });
+
+    // if act already exist return the error
+    if (existingAct) {
+      return res
+        .status(500)
+        .json(new ErrorResponse(ACTS_ERROR.ACT_ALREADY_EXISTS_ERROR));
+    }
 
     // creating New Theater
     await ActModel.create(newActData);

@@ -32,8 +32,15 @@ const CREATE_ACT_ERROR = {
   errorMessage: "Error while creating an Act",
 };
 
+const ACT_ALREADY_EXISTS_ERROR = {
+  statusCode: 500,
+  errorCode: "ACT-ERROR-0003",
+  errorMessage: "Act Already Exists",
+};
+
 export const ACTS_ERROR: ErrorMap = {
   CREATE_ACT_ERROR: CREATE_ACT_ERROR,
+  ACT_ALREADY_EXISTS_ERROR: ACT_ALREADY_EXISTS_ERROR,
 };
 
 export const genericActError = (errorMessage: string): ErrorResponseType => {

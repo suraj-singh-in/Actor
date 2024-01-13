@@ -9,7 +9,7 @@ class MongoConnection {
     // Actual database URI
     const databaseUrl = process.env.MONGODB_URI;
 
-    // If no database URI exits
+    // If no database URI exits, log error and close the application
     if (!databaseUrl) {
       logger.error('No mongo connection string. Set databaseUrl environment variable.')
       process.exit(1)

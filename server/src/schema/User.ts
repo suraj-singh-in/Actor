@@ -12,7 +12,7 @@ export interface UserDocument extends Document {
 // Define the schema
 const userSchema = new Schema<UserDocument>({
   name: { type: String, required: true },
-  userName: { type: String, required: true },
+  userName: { type: String, required: true, unique: true },
   hash: { type: String, required: true },
   salt: { type: String, required: true },
 });

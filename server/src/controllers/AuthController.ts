@@ -13,6 +13,14 @@ import {
   INTERNAL_SERVER_ERROR,
 } from "../constants/errorResponeMapping";
 
+/**
+ * function for user registration (sign-up).
+ * @function
+ * @async
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next function.
+ */
 export const signUp = async (
   req: Request,
   res: Response,
@@ -50,6 +58,15 @@ export const signUp = async (
     res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
+
+/**
+ * function for fetching user details.
+ * @function
+ * @async
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next function.
+ */
 export const getUserDetails = async (
   req: Request,
   res: Response,
@@ -73,6 +90,14 @@ export const getUserDetails = async (
   }
 };
 
+/**
+ * function for user login/authentication.
+ * @function
+ * @async
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next function.
+ */
 export const login = async (
   req: Request,
   res: Response,
@@ -105,13 +130,11 @@ export const login = async (
     // create new jwt token
     const jwtToken = issueJWT(userDetails);
 
-    res
-      .status(200)
-      .json(
-        new SuccessResponse({
-          data: { token: jwtToken.token, expiresIn: jwtToken.expires },
-        })
-      );
+    res.status(200).json(
+      new SuccessResponse({
+        data: { token: jwtToken.token, expiresIn: jwtToken.expires },
+      })
+    );
 
     // send 200 response
     res.status(200).json(new SuccessResponse({ data: { name, userName } }));

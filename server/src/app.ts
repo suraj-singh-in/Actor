@@ -8,6 +8,7 @@ import passport from "passport";
 
 import logger from "./config/Logger";
 
+// loding configs
 require("./config/DBConfig");
 require("./config/DBSchemas");
 require("./config/passport")(passport);

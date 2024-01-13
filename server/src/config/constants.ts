@@ -38,6 +38,13 @@ export const TheaterRouteEndPoints = {
   CREATE_THEATER: "/create",
 };
 
+/**
+ * Object containing endpoint paths for authentication-related routes.
+ * @typedef {Object} AuthRouterEndPoints
+ * @property {string} SIGN_UP - The endpoint path for user registration/sign-up.
+ * @property {string} GET_USER_DETAILS - The endpoint path for fetching user details.
+ * @property {string} LOGIN - The endpoint path for user login/authentication.
+ */
 export const AuthRouterEndPoints = {
   SIGN_UP: "/signup",
   GET_USER_DETAILS: "/getUserDetails",

@@ -92,6 +92,13 @@ export const issueJWT = (user: UserDocument) => {
   };
 };
 
+/**
+ * Express middleware for validating POST request data based on specified validation rules.
+ * @function
+ * @param {ValidationRules} rules - Validation rules to be applied to the request body.
+ * @returns {RequestHandler} Express middleware function.
+ * @throws Will throw an error if there is an issue during validation.
+ */
 export const postRequestValidator =
   (rules: ValidationRules): RequestHandler =>
   async (req: Request, res: Response, next: NextFunction) => {

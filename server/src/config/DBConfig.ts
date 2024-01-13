@@ -1,4 +1,5 @@
 import mongoose, { Connection, ConnectOptions } from "mongoose";
+import logger from "./Logger";
 
 class MongoConnection {
   private static instance: MongoConnection;
@@ -7,6 +8,12 @@ class MongoConnection {
   public constructor() {
     // Actual database URI
     const databaseUrl = process.env.MONGODB_URI;
+
+    // If no database URI exits
+    if (!databaseUrl) {
+      logger.error('No mongo connection string. Set databaseUrl environment variable.')
+      process.exit(1)
+    }
 
     // Connect to MongoDB using Mongoose
     mongoose

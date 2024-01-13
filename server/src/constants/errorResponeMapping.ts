@@ -26,22 +26,39 @@ export const BAD_REQUEST_ERROR: ErrorResponseType = {
   errorMessage: "Bad Request",
 };
 
-const CREATE_ACT_ERROR = {
+const CREATE_ACT_ERROR: ErrorResponseType = {
   statusCode: 500,
   errorCode: "ACT-ERROR-0002",
   errorMessage: "Error while creating an Act",
 };
 
-const ACT_ALREADY_EXISTS_ERROR = {
+const ACT_ALREADY_EXISTS_ERROR: ErrorResponseType = {
   statusCode: 500,
   errorCode: "ACT-ERROR-0003",
   errorMessage: "Act Already Exists",
 };
 
-const MORE_THAN_ONE_ACTIVE_VERSE_ERROR = {
+const MORE_THAN_ONE_ACTIVE_VERSE_ERROR: ErrorResponseType = {
   statusCode: 500,
   errorCode: "ACT-ERROR-0004",
   errorMessage: "Exactly one Active Verse is allowed",
+};
+
+const NO_USER_FOUND: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "AUTH-ERROR-0001",
+  errorMessage: "No User found",
+};
+
+const WRONG_PASSWORD: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "AUTH-ERROR-0002",
+  errorMessage: "Wrong password",
+};
+
+export const AUTH_ERROR: ErrorMap = {
+  NO_USER_FOUND: NO_USER_FOUND,
+  WRONG_PASSWORD: WRONG_PASSWORD,
 };
 
 export const ACTS_ERROR: ErrorMap = {

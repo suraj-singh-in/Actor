@@ -10,6 +10,7 @@ export const MasterRouterRouteMap = {
   ACTS_ROUTE: "/acts",
   THEATER_ROUTE: "/theater",
   MOCK_ROUTE: "/actor",
+  AUTH_ROUTER: "/auth",
 };
 
 export const mockRouteEndpoints = {
@@ -35,4 +36,10 @@ export const ActsRouteEndpoints = {
  */
 export const TheaterRouteEndPoints = {
   CREATE_THEATER: "/create",
+};
+
+export const AuthRouterEndPoints = {
+  SIGN_UP: "/signup",
+  GET_USER_DETAILS: "/getUserDetails",
+  LOGIN: "/login",
 };

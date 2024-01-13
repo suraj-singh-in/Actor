@@ -33,6 +33,17 @@ const changeActiveVerseRequestRule: ValidationRules = {
   verseId: "required|string",
 };
 
+const registerUserRequestRule: ValidationRules = {
+  userName: "required|string",
+  name: "required|string",
+  password: "required|string",
+};
+
+const loginUserRequestRule: ValidationRules = {
+  userName: "required|string",
+  password: "required|string",
+};
+
 /**
  * Represents a collection of theater validation rules.
  * @typedef {Object} TheaterValidationRule
@@ -47,4 +58,9 @@ const ActValidationRule: validationRulesMap = {
   changeActiveVerseRequestRule: changeActiveVerseRequestRule,
 };
 
-export { TheaterValidationRule, ActValidationRule };
+const AuthValidationRule: validationRulesMap = {
+  registerUserRequestRule: registerUserRequestRule,
+  loginUserRequestRule: loginUserRequestRule,
+};
+
+export { TheaterValidationRule, ActValidationRule, AuthValidationRule };

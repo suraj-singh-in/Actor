@@ -28,6 +28,11 @@ const createActRequestRule: ValidationRules = {
   "verses.*.isActive": "boolean",
 };
 
+const changeActiveVerseRequestRule: ValidationRules = {
+  actId: "required|string",
+  verseId: "required|string",
+};
+
 /**
  * Represents a collection of theater validation rules.
  * @typedef {Object} TheaterValidationRule
@@ -39,6 +44,7 @@ const TheaterValidationRule: validationRulesMap = {
 
 const ActValidationRule: validationRulesMap = {
   createActRequestRule: createActRequestRule,
+  changeActiveVerseRequestRule: changeActiveVerseRequestRule,
 };
 
 export { TheaterValidationRule, ActValidationRule };

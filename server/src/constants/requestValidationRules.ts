@@ -15,6 +15,10 @@ const createTheaterRequestRule: ValidationRules = {
   "permissions.*": "string|required",
 };
 
+/**
+ * Validation rules for creating an Act request.
+ * @type {ValidationRules}
+ */
 const createActRequestRule: ValidationRules = {
   name: "required|string",
   endPoint: "required|string",
@@ -28,23 +32,58 @@ const createActRequestRule: ValidationRules = {
   "verses.*.isActive": "boolean",
 };
 
+/**
+ * Validation rules for changing the active verse in an Act request.
+ * @type {ValidationRules}
+ */
 const changeActiveVerseRequestRule: ValidationRules = {
   actId: "required|string",
   verseId: "required|string",
 };
 
 /**
- * Represents a collection of theater validation rules.
- * @typedef {Object} TheaterValidationRule
- * @property {CreateTheaterRequestRule} createTheaterRequestRule - The validation rules for creating a theater.
+ * Validation rules for registering a new user request.
+ * @type {ValidationRules}
+ */
+const registerUserRequestRule: ValidationRules = {
+  userName: "required|string",
+  name: "required|string",
+  password: "required|string",
+};
+
+/**
+ * Validation rules for logging in a user request.
+ * @type {ValidationRules}
+ */
+const loginUserRequestRule: ValidationRules = {
+  userName: "required|string",
+  password: "required|string",
+};
+
+/**
+ * Validation rules map for Theater-realted requests.
+ * @type {Object} TheaterValidationRule
  */
 const TheaterValidationRule: validationRulesMap = {
   createTheaterRequestRule: createTheaterRequestRule,
 };
 
+/**
+ * Validation rules map for Act-related requests.
+ * @type {ValidationRulesMap}
+ */
 const ActValidationRule: validationRulesMap = {
   createActRequestRule: createActRequestRule,
   changeActiveVerseRequestRule: changeActiveVerseRequestRule,
 };
 
-export { TheaterValidationRule, ActValidationRule };
+/**
+ * Validation rules map for authentication-related requests.
+ * @type {ValidationRulesMap}
+ */
+const AuthValidationRule: validationRulesMap = {
+  registerUserRequestRule: registerUserRequestRule,
+  loginUserRequestRule: loginUserRequestRule,
+};
+
+export { TheaterValidationRule, ActValidationRule, AuthValidationRule };

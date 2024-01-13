@@ -4,11 +4,14 @@ import { JsonParser, ObjectMapper } from "jackson-js";
 
 import process from "process";
 import rTracer from "cls-rtracer";
-
-require("./config/DBConfig");
-require("./config/DBSchemas");
+import passport from "passport";
 
 import logger from "./config/Logger";
+
+// loding configs
+require("./config/DBConfig");
+require("./config/DBSchemas");
+require("./config/passport")(passport);
 
 // Import the main router from the specified file
 import MasterRouter from "./routers/MasterRouter";
@@ -36,6 +39,7 @@ server.app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bod
 server.app.use(express.json()); // Parse JSON bodies
 server.app.use(express.raw()); // Parse raw request bodies
 server.app.use(rTracer.expressMiddleware()); // Add request tracing middleware
+server.app.use(passport.initialize()); //  initialize the passport object on every request
 
 // Use the specified router for handling routes
 server.app.use("/", server.router);

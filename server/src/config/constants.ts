@@ -10,6 +10,7 @@ export const MasterRouterRouteMap = {
   ACTS_ROUTE: "/acts",
   THEATER_ROUTE: "/theater",
   MOCK_ROUTE: "/actor",
+  AUTH_ROUTER: "/auth",
 };
 
 export const mockRouteEndpoints = {
@@ -35,4 +36,17 @@ export const ActsRouteEndpoints = {
  */
 export const TheaterRouteEndPoints = {
   CREATE_THEATER: "/create",
+};
+
+/**
+ * Object containing endpoint paths for authentication-related routes.
+ * @typedef {Object} AuthRouterEndPoints
+ * @property {string} SIGN_UP - The endpoint path for user registration/sign-up.
+ * @property {string} GET_USER_DETAILS - The endpoint path for fetching user details.
+ * @property {string} LOGIN - The endpoint path for user login/authentication.
+ */
+export const AuthRouterEndPoints = {
+  SIGN_UP: "/signup",
+  GET_USER_DETAILS: "/getUserDetails",
+  LOGIN: "/login",
 };

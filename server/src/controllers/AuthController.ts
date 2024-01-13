@@ -135,9 +135,6 @@ export const login = async (
         data: { token: jwtToken.token, expiresIn: jwtToken.expires },
       })
     );
-
-    // send 200 response
-    res.status(200).json(new SuccessResponse({ data: { name, userName } }));
   } catch (error) {
     // logging error in case
     logger.error(loggerString("Error while login user", error));

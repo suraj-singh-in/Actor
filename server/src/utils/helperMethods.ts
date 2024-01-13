@@ -125,6 +125,6 @@ export const postRequestValidator =
       logger.error(loggerString("Request validation failed", error));
 
       // on fail send generic error
-      res.status(412).send(new ErrorResponse(INTERNAL_SERVER_ERROR));
+      return res.status(412).send(new ErrorResponse(INTERNAL_SERVER_ERROR));
     }
   };

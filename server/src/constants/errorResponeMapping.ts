@@ -77,12 +77,23 @@ const WRONG_PASSWORD: ErrorResponseType = {
 };
 
 /**
+ * Error response for the scenario when user name already exists.
+ * @type {ErrorResponseType}
+ */
+const AUTH_USER_ALERADY_EXISTS: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "AUTH-ERROR-0003",
+  errorMessage: "User Already Exists",
+};
+
+/**
  * Map containing authentication-related errors.
  * @type {ErrorMap}
  */
 export const AUTH_ERROR: ErrorMap = {
   NO_USER_FOUND: NO_USER_FOUND,
   WRONG_PASSWORD: WRONG_PASSWORD,
+  AUTH_USER_ALERADY_EXISTS: AUTH_USER_ALERADY_EXISTS,
 };
 
 /**

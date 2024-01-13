@@ -60,9 +60,9 @@ export const mockFuntion = async (
     }
 
     //TODO! return based on active verse type
-    res.status(activeVerse.httpCode).json(JSON.parse(activeVerse.response));
+    return res.status(activeVerse.httpCode).json(JSON.parse(activeVerse.response));
   } catch (error) {
     logger.error(loggerString("Error While Mocking", error));
-    res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };

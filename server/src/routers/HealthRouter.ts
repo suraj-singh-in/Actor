@@ -18,7 +18,7 @@ class HealthController {
       "/health",
       (req: Request, res: Response, next: NextFunction) => {
         logger.info("Health Checked");
-        res.status(200).json(new SuccessResponse({ message: "OK 200" }));
+        return res.status(200).json(new SuccessResponse({ message: "OK 200" }));
       }
     );
   }

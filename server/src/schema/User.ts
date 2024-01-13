@@ -17,6 +17,9 @@ const userSchema = new Schema<UserDocument>({
   salt: { type: String, required: true },
 });
 
+userSchema.index({ userName: 1 }, { unique: true });
+
+
 // Create and export the model
 const UserModel = model<UserDocument>("User", userSchema);
 

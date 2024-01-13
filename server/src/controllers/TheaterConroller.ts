@@ -27,7 +27,7 @@ const createTheater = async (
     await TheaterModel.create(newTheaterData);
 
     //  sending success response
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse({
         message: "Theater Created Successfully",
       })
@@ -37,7 +37,7 @@ const createTheater = async (
     logger.error(loggerString("Error While Creating Theater", error));
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 

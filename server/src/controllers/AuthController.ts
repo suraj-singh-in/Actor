@@ -30,6 +30,15 @@ export const signUp = async (
     // extranting user information body
     const { password, userName, name } = req.body;
 
+    // check if user userName available
+    const user = await UserModel.findOne({ userName });
+
+    if (user) {
+      return res
+        .status(500)
+        .json(new ErrorResponse(AUTH_ERROR.AUTH_USER_ALERADY_EXISTS));
+    }
+
     // creating salt hash
     const { salt, hash } = generatePassword(password);
 
@@ -45,9 +54,9 @@ export const signUp = async (
     const jwt = issueJWT(newUser);
 
     // Send token to user
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse({
-        data: { user: newUser, token: jwt.token, expiresIn: jwt.expires },
+        data: { token: jwt.token, expiresIn: jwt.expires },
       })
     );
   } catch (error) {
@@ -55,7 +64,7 @@ export const signUp = async (
     logger.error(loggerString("Error while signing up the user", error));
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
@@ -80,13 +89,13 @@ export const getUserDetails = async (
     const { name, userName } = userDetails;
 
     // send 200 response
-    res.status(200).json(new SuccessResponse({ data: { name, userName } }));
+    return res.status(200).json(new SuccessResponse({ data: { name, userName } }));
   } catch (error) {
     // logging error in case
     logger.error(loggerString("Error while geting user information", error));
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
@@ -130,7 +139,7 @@ export const login = async (
     // create new jwt token
     const jwtToken = issueJWT(userDetails);
 
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse({
         data: { token: jwtToken.token, expiresIn: jwtToken.expires },
       })
@@ -140,6 +149,6 @@ export const login = async (
     logger.error(loggerString("Error while login user", error));
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };

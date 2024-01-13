@@ -17,7 +17,7 @@ export const getAllActs = async (
   next: NextFunction
 ) => {
   const allActs = await ActModel.find({});
-  res.status(200).json(
+  return res.status(200).json(
     new SuccessResponse({
       data: allActs,
     })
@@ -84,7 +84,7 @@ export const createAct = async (
     await VerseModal.create(formmatedVerses);
 
     //  sending success response
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse({
         message: "Act Created Successfully",
       })
@@ -95,11 +95,13 @@ export const createAct = async (
 
     // check for cast error
     if (error.name === "ValidationError") {
-      res.status(500).json(new ErrorResponse(genericActError(error.message)));
+      return res
+        .status(500)
+        .json(new ErrorResponse(genericActError(error.message)));
     }
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
+    return res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
   }
 };
 
@@ -116,14 +118,14 @@ export const changeActiveVerse = async (
     const act = await ActModel.findById(actId);
 
     if (!act) {
-      res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
     }
 
     // check if verse exist
     const verse = await VerseModal.findById(verseId);
 
     if (!verse) {
-      res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
     }
 
     // Deactivate all verse for the Act except the specified one
@@ -135,7 +137,7 @@ export const changeActiveVerse = async (
     // Activate the specified verse
     await VerseModal.findByIdAndUpdate(verseId, { $set: { isActive: true } });
 
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse({
         message: `Active Verse of ${act.name} changed to ${verse.name}`,
       })
@@ -146,10 +148,12 @@ export const changeActiveVerse = async (
 
     // check for cast error
     if (error.name === "CastError") {
-      res.status(500).json(new ErrorResponse(genericActError(error.message)));
+      return res
+        .status(500)
+        .json(new ErrorResponse(genericActError(error.message)));
     }
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
+    return res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
   }
 };

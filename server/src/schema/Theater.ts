@@ -7,15 +7,22 @@ import { Schema, model, Document } from "mongoose";
 export interface TheaterDocument extends Document {
   name: string;
   logo: string;
-  permissions: string[];
+  isAdminTheater: boolean;
+  viewerList: Schema.Types.ObjectId[];
+  editorList: Schema.Types.ObjectId[];
 }
 
 // Define the schema
 const theaterSchema = new Schema<TheaterDocument>({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   logo: { type: String },
-  permissions: [String],
+  isAdminTheater: { type: Boolean, default: false },
+  viewerList: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  editorList: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
+
+//create uniqe index
+theaterSchema.index({ name: 1 }, { unique: true });
 
 // Create the model
 const TheaterModel = model<TheaterDocument>("Theater", theaterSchema);

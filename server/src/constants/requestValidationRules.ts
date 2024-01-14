@@ -5,14 +5,18 @@ import { ValidationRules, validationRulesMap } from "../utils/typeDefinations";
  * @typedef {Object} CreateTheaterRequestRule
  * @property {string} name - The required string property for the theater name.
  * @property {string} logo - The optional string property for the theater logo.
- * @property {string[]} permissions - The optional array property for theater permissions.
- * @property {string} permissions.* - Each item in the permissions array is a required string.
+ * @property {string[]} viewerList - The optional array property for viewer list permissions.
+ * @property {string[]} editorList - The optional array property for editor list permissions.
+ * @property {string} isAdminTheater - The required boolean property indicating admin property.
  */
 const createTheaterRequestRule: ValidationRules = {
   name: "required|string",
   logo: "string",
-  permissions: "array",
-  "permissions.*": "string|required",
+  isAdminTheater: "required|boolean",
+  viewerList: "array",
+  "viewerList.*": "string|required",
+  editorList: "array",
+  "editorList.*": "string|required",
 };
 
 /**

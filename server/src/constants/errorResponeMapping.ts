@@ -92,6 +92,12 @@ const AUTH_USER_ALERADY_EXISTS: ErrorResponseType = {
   errorMessage: "User Already Exists",
 };
 
+const THEATER_NOT_FOUND: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "AUTH-ERROR-0001",
+  errorMessage: "No Theater Exist for given Theater ID",
+};
+
 /**
  * Map containing authentication-related errors.
  * @type {ErrorMap}
@@ -110,6 +116,10 @@ export const ACTS_ERROR: ErrorMap = {
   CREATE_ACT_ERROR: CREATE_ACT_ERROR,
   ACT_ALREADY_EXISTS_ERROR: ACT_ALREADY_EXISTS_ERROR,
   MORE_THAN_ONE_ACTIVE_VERSE_ERROR: MORE_THAN_ONE_ACTIVE_VERSE_ERROR,
+};
+
+export const THEATER_ERROR: ErrorMap = {
+  THEATER_NOT_FOUND: THEATER_NOT_FOUND,
 };
 
 /**

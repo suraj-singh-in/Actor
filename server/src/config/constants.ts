@@ -36,6 +36,7 @@ export const ActsRouteEndpoints = {
  */
 export const TheaterRouteEndPoints = {
   CREATE_THEATER: "/create",
+  GET_THEATER_DETAILS: "/getTheaterDetails/:theaterId",
 };
 
 /**

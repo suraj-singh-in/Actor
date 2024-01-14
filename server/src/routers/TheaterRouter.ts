@@ -2,8 +2,11 @@ import passport from "passport";
 import { Router } from "express";
 
 import { TheaterRouteEndPoints } from "../config/constants";
-import { createTheater } from "../controllers/TheaterConroller";
-import { isAdminMiddleware, postRequestValidator } from "../utils/helperMethods";
+import { createTheater, getTheaterDetails } from "../controllers/TheaterConroller";
+import {
+  isAdminMiddleware,
+  postRequestValidator,
+} from "../utils/helperMethods";
 import { TheaterValidationRule } from "../constants/requestValidationRules";
 
 class TheaterRouter {
@@ -24,6 +27,11 @@ class TheaterRouter {
       passport.authenticate("jwt", { session: false }),
       isAdminMiddleware,
       createTheater
+    );
+    this._router.get(
+      TheaterRouteEndPoints.GET_THEATER_DETAILS,
+      passport.authenticate("jwt", { session: false }),
+      getTheaterDetails
     );
   }
 }

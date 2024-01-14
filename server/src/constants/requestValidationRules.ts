@@ -57,6 +57,11 @@ const registerUserRequestRule: ValidationRules = {
   "roleList.*": "required|string",
 };
 
+const editViewerOrEditorListRequestRule: ValidationRules = {
+  theaterId: "required|string",
+  userId: "required|string",
+};
+
 /**
  * Validation rules for logging in a user request.
  * @type {ValidationRules}
@@ -72,6 +77,7 @@ const loginUserRequestRule: ValidationRules = {
  */
 const TheaterValidationRule: validationRulesMap = {
   createTheaterRequestRule: createTheaterRequestRule,
+  editViewerOrEditorListRequestRule: editViewerOrEditorListRequestRule,
 };
 
 /**

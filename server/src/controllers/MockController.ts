@@ -6,7 +6,7 @@ import {
 } from "../constants/errorResponeMapping";
 import TheaterModel from "../schema/Theater";
 import ActModel from "../schema/Act";
-import VerseModal from "../schema/Verse";
+import VerseModel from "../schema/Verse";
 import logger from "../config/Logger";
 import { loggerString } from "../utils/helperMethods";
 
@@ -49,7 +49,7 @@ export const mockFuntion = async (
     }
 
     //find Active Verse
-    const activeVerse = await VerseModal.findOne({
+    const activeVerse = await VerseModel.findOne({
       isActive: true,
       actId: act["_id"],
     });

@@ -5,6 +5,7 @@ import { TheaterRouteEndPoints } from "../config/constants";
 import {
   addEditor,
   addViewer,
+  cloneTheater,
   createTheater,
   getTheaterDetails,
 } from "../controllers/TheaterConroller";
@@ -36,16 +37,26 @@ class TheaterRouter {
     this._router.post(
       TheaterRouteEndPoints.ADD_VIEWER_TO_THEATER,
       passport.authenticate("jwt", { session: false }),
-      postRequestValidator(TheaterValidationRule.editViewerOrEditorListRequestRule),
+      postRequestValidator(
+        TheaterValidationRule.editViewerOrEditorListRequestRule
+      ),
       isAdminMiddleware,
       addViewer
     );
     this._router.post(
       TheaterRouteEndPoints.ADD_EDITOR_TO_THEATER,
       passport.authenticate("jwt", { session: false }),
-      postRequestValidator(TheaterValidationRule.editViewerOrEditorListRequestRule),
+      postRequestValidator(
+        TheaterValidationRule.editViewerOrEditorListRequestRule
+      ),
       isAdminMiddleware,
       addEditor
+    );
+    this._router.post(
+      TheaterRouteEndPoints.CLONE_THEATER,
+      passport.authenticate("jwt", { session: false }),
+      postRequestValidator(TheaterValidationRule.cloneTheaterRequestRule),
+      cloneTheater
     );
     this._router.get(
       TheaterRouteEndPoints.GET_THEATER_DETAILS,

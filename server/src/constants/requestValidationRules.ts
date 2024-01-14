@@ -62,6 +62,10 @@ const editViewerOrEditorListRequestRule: ValidationRules = {
   userId: "required|string",
 };
 
+const cloneTheaterRequestRule: ValidationRules = {
+  theaterId: "required|string",
+};
+
 /**
  * Validation rules for logging in a user request.
  * @type {ValidationRules}
@@ -78,6 +82,7 @@ const loginUserRequestRule: ValidationRules = {
 const TheaterValidationRule: validationRulesMap = {
   createTheaterRequestRule: createTheaterRequestRule,
   editViewerOrEditorListRequestRule: editViewerOrEditorListRequestRule,
+  cloneTheaterRequestRule: cloneTheaterRequestRule,
 };
 
 /**

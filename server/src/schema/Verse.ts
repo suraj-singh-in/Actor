@@ -22,7 +22,7 @@ const verseSchema = new Schema<VerseDocument>({
 });
 
 // Create the model
-const VerseModal = model<VerseDocument>("Verse", verseSchema);
+const VerseModel = model<VerseDocument>("Verse", verseSchema);
 
 //  export model
-export default VerseModal;
+export default VerseModel;

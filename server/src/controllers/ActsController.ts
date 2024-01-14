@@ -9,7 +9,7 @@ import {
   UNAUTHORIZED,
   genericActError,
 } from "../constants/errorResponeMapping";
-import VerseModal from "../schema/Verse";
+import VerseModel from "../schema/Verse";
 import TheaterModel from "../schema/Theater";
 
 export const getAllActs = async (
@@ -93,7 +93,7 @@ export const createAct = async (
     }));
 
     // create all Verse
-    await VerseModal.create(formmatedVerses);
+    await VerseModel.create(formmatedVerses);
 
     //  sending success response
     return res.status(200).json(
@@ -153,20 +153,20 @@ export const changeActiveVerse = async (
     }
 
     // check if verse exist
-    const verse = await VerseModal.findById(verseId);
+    const verse = await VerseModel.findById(verseId);
 
     if (!verse) {
       return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
     }
 
     // Deactivate all verse for the Act except the specified one
-    await VerseModal.updateMany(
+    await VerseModel.updateMany(
       { _id: { $ne: verseId }, actId },
       { $set: { isActive: false } }
     );
 
     // Activate the specified verse
-    await VerseModal.findByIdAndUpdate(verseId, { $set: { isActive: true } });
+    await VerseModel.findByIdAndUpdate(verseId, { $set: { isActive: true } });
 
     return res.status(200).json(
       new SuccessResponse({

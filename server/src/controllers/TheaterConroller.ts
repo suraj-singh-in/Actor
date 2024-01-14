@@ -5,11 +5,12 @@ import {
   AUTH_ERROR,
   INTERNAL_SERVER_ERROR,
   THEATER_ERROR,
+  UNAUTHORIZED,
 } from "../constants/errorResponeMapping";
 import TheaterModel from "../schema/Theater";
 import { loggerString } from "../utils/helperMethods";
 import ActModel from "../schema/Act";
-import VerseModal from "../schema/Verse";
+import VerseModel from "../schema/Verse";
 import UserModel from "../schema/User";
 
 /**
@@ -81,7 +82,7 @@ const getTheaterDetails = async (
     const acts = await ActModel.find({ theaterId: theater._id });
 
     // Find all verses associated with the acts
-    const verses = await VerseModal.find({
+    const verses = await VerseModel.find({
       actId: { $in: acts.map((act) => act._id) },
     }).exec();
 
@@ -216,4 +217,98 @@ const addEditor = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createTheater, getTheaterDetails, addViewer, addEditor };
+const cloneTheater = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // 1. CHECK IF THE THEATER EXISTS
+    // get theaterId from body
+    const { theaterId } = req.body;
+
+    // get Theater from Id
+    const theater = await TheaterModel.findById(theaterId);
+
+    // send error if no theater found
+    if (!theater) {
+      return res
+        .status(500)
+        .json(new ErrorResponse(THEATER_ERROR.THEATER_NOT_FOUND));
+    }
+
+    // 2. CHECK IF THE USER HAVE PERMISSION TO CLONE THE THEATER
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id } = userDetails;
+
+    // if user is not the editor of the given route, then user cannout edd acts in it
+    if (
+      !(theater.viewerList.includes(_id) || theater.editorList.includes(_id))
+    ) {
+      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
+    }
+
+    // 3. CREATE CLONE THEATER PROPERTIES
+    // create properties for cloned theater
+    const clonedTheaterPropreties = {
+      name: theater.name + "_" + _id,
+      isAdminTheater: false,
+      logo: theater.logo,
+      viewerList: [],
+      editorList: [_id],
+    };
+
+    // create a new cloned theater
+    const clonedTheater = await TheaterModel.create(clonedTheaterPropreties);
+
+    // 4. Retrieve acts associated with the original theater
+    const originalActs = await ActModel.find({
+      theaterId,
+    });
+
+    // 5. Clone each act from the original theater and associate it with the new theater
+    for (const originalAct of originalActs) {
+      const clonedAct = new ActModel({
+        name: originalAct.name,
+        endPoint: originalAct.endPoint,
+        method: originalAct.method,
+        theaterId: clonedTheater._id,
+      });
+
+      await clonedAct.save();
+
+      // 6. Clone each verse from the original acts and associate them with the new acts
+      const originalVerses = await VerseModel.find({ actId: originalAct._id });
+
+      for (const originalVerse of originalVerses) {
+        const clonedVerse = new VerseModel({
+          name: originalVerse.name,
+          response: originalVerse.response,
+          responseType: originalVerse.responseType,
+          httpCode: originalVerse.httpCode,
+          isActive: originalVerse.isActive,
+          actId: clonedAct._id,
+        });
+
+        await clonedVerse.save();
+      }
+    }
+
+    return res.status(200).json(
+      new SuccessResponse({
+        message: `Theater Cloned Successfully with ${clonedTheater._id}`,
+      })
+    );
+  } catch (error) {
+    // logging error in case
+    logger.error(loggerString("Error While cloning the theater", error));
+
+    // responsing with generic error
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+  }
+};
+
+export { createTheater, getTheaterDetails, addViewer, addEditor, cloneTheater };

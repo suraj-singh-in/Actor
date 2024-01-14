@@ -49,6 +49,8 @@ const registerUserRequestRule: ValidationRules = {
   userName: "required|string",
   name: "required|string",
   password: "required|string",
+  roleList: "array",
+  "roleList.*": "required|string",
 };
 
 /**

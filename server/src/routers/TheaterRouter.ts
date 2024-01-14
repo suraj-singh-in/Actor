@@ -1,7 +1,9 @@
+import passport from "passport";
 import { Router } from "express";
+
 import { TheaterRouteEndPoints } from "../config/constants";
 import { createTheater } from "../controllers/TheaterConroller";
-import { postRequestValidator } from "../utils/helperMethods";
+import { isAdminMiddleware, postRequestValidator } from "../utils/helperMethods";
 import { TheaterValidationRule } from "../constants/requestValidationRules";
 
 class TheaterRouter {
@@ -19,6 +21,8 @@ class TheaterRouter {
     this._router.post(
       TheaterRouteEndPoints.CREATE_THEATER,
       postRequestValidator(TheaterValidationRule.createTheaterRequestRule),
+      passport.authenticate("jwt", { session: false }),
+      isAdminMiddleware,
       createTheater
     );
   }

@@ -28,7 +28,7 @@ export const signUp = async (
 ) => {
   try {
     // extranting user information body
-    const { password, userName, name } = req.body;
+    const { password, userName, name, roleList } = req.body;
 
     // check if user userName available
     const user = await UserModel.findOne({ userName });
@@ -48,6 +48,7 @@ export const signUp = async (
       hash,
       userName,
       name,
+      roleList,
     });
 
     // create new JWT token
@@ -86,10 +87,12 @@ export const getUserDetails = async (
     const userDetails: any = req["user"];
 
     // extract useful information
-    const { name, userName } = userDetails;
+    const { name, userName, roleList } = userDetails;
 
     // send 200 response
-    return res.status(200).json(new SuccessResponse({ data: { name, userName } }));
+    return res
+      .status(200)
+      .json(new SuccessResponse({ data: { name, userName, roleList } }));
   } catch (error) {
     // logging error in case
     logger.error(loggerString("Error while geting user information", error));

@@ -26,6 +26,12 @@ export const BAD_REQUEST_ERROR: ErrorResponseType = {
   errorMessage: "Bad Request",
 };
 
+export const UNAUTHORIZED: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "ERROR-0003",
+  errorMessage: "You are not authorized to access this route.",
+};
+
 /**
  * Error response for the scenario when an error occurs while creating an Act.
  * @type {ErrorResponseType}

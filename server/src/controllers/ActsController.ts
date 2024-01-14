@@ -6,6 +6,7 @@ import logger from "../config/Logger";
 import {
   ACTS_ERROR,
   BAD_REQUEST_ERROR,
+  UNAUTHORIZED,
   genericActError,
 } from "../constants/errorResponeMapping";
 import VerseModal from "../schema/Verse";
@@ -38,7 +39,18 @@ export const createAct = async (
 
     // if theater does note exist
     if (!theater) {
-      return res.status(400).json(BAD_REQUEST_ERROR);
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id } = userDetails;
+
+    // if user is not the editor of the given route, then user cannout edd acts in it
+    if (!theater.editorList.includes(_id)) {
+      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
     }
 
     // Check if already exiting act
@@ -119,6 +131,25 @@ export const changeActiveVerse = async (
 
     if (!act) {
       return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // get theater from theater id
+    const theater = await TheaterModel.findOne({ _id: act.theaterId });
+
+    // if theater does note exist
+    if (!theater) {
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id } = userDetails;
+
+    // if user is not the editor of the given route, then user cannout edd acts in it
+    if (!theater.editorList.includes(_id)) {
+      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
     }
 
     // check if verse exist

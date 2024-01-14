@@ -29,7 +29,7 @@ export const BAD_REQUEST_ERROR: ErrorResponseType = {
 export const UNAUTHORIZED: ErrorResponseType = {
   statusCode: 401,
   errorCode: "ERROR-0003",
-  errorMessage: "You are not authorized to access this route.",
+  errorMessage: "You are not authorized to access this resource.",
 };
 
 /**

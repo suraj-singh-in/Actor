@@ -6,7 +6,7 @@ import {
 } from "../constants/errorResponeMapping";
 import TheaterModel from "../schema/Theater";
 import ActModel from "../schema/Act";
-import VerseModal from "../schema/Verse";
+import VerseModel from "../schema/Verse";
 import logger from "../config/Logger";
 import { loggerString } from "../utils/helperMethods";
 
@@ -49,7 +49,7 @@ export const mockFuntion = async (
     }
 
     //find Active Verse
-    const activeVerse = await VerseModal.findOne({
+    const activeVerse = await VerseModel.findOne({
       isActive: true,
       actId: act["_id"],
     });
@@ -60,9 +60,9 @@ export const mockFuntion = async (
     }
 
     //TODO! return based on active verse type
-    res.status(activeVerse.httpCode).json(JSON.parse(activeVerse.response));
+    return res.status(activeVerse.httpCode).json(JSON.parse(activeVerse.response));
   } catch (error) {
     logger.error(loggerString("Error While Mocking", error));
-    res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };

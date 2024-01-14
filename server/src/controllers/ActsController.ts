@@ -6,9 +6,10 @@ import logger from "../config/Logger";
 import {
   ACTS_ERROR,
   BAD_REQUEST_ERROR,
+  UNAUTHORIZED,
   genericActError,
 } from "../constants/errorResponeMapping";
-import VerseModal from "../schema/Verse";
+import VerseModel from "../schema/Verse";
 import TheaterModel from "../schema/Theater";
 
 export const getAllActs = async (
@@ -17,7 +18,7 @@ export const getAllActs = async (
   next: NextFunction
 ) => {
   const allActs = await ActModel.find({});
-  res.status(200).json(
+  return res.status(200).json(
     new SuccessResponse({
       data: allActs,
     })
@@ -38,7 +39,18 @@ export const createAct = async (
 
     // if theater does note exist
     if (!theater) {
-      return res.status(400).json(BAD_REQUEST_ERROR);
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id } = userDetails;
+
+    // if user is not the editor of the given route, then user cannout edd acts in it
+    if (!theater.editorList.includes(_id)) {
+      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
     }
 
     // Check if already exiting act
@@ -81,10 +93,10 @@ export const createAct = async (
     }));
 
     // create all Verse
-    await VerseModal.create(formmatedVerses);
+    await VerseModel.create(formmatedVerses);
 
     //  sending success response
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse({
         message: "Act Created Successfully",
       })
@@ -95,11 +107,13 @@ export const createAct = async (
 
     // check for cast error
     if (error.name === "ValidationError") {
-      res.status(500).json(new ErrorResponse(genericActError(error.message)));
+      return res
+        .status(500)
+        .json(new ErrorResponse(genericActError(error.message)));
     }
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
+    return res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
   }
 };
 
@@ -116,26 +130,45 @@ export const changeActiveVerse = async (
     const act = await ActModel.findById(actId);
 
     if (!act) {
-      res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // get theater from theater id
+    const theater = await TheaterModel.findOne({ _id: act.theaterId });
+
+    // if theater does note exist
+    if (!theater) {
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id } = userDetails;
+
+    // if user is not the editor of the given route, then user cannout edd acts in it
+    if (!theater.editorList.includes(_id)) {
+      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
     }
 
     // check if verse exist
-    const verse = await VerseModal.findById(verseId);
+    const verse = await VerseModel.findById(verseId);
 
     if (!verse) {
-      res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
     }
 
     // Deactivate all verse for the Act except the specified one
-    await VerseModal.updateMany(
+    await VerseModel.updateMany(
       { _id: { $ne: verseId }, actId },
       { $set: { isActive: false } }
     );
 
     // Activate the specified verse
-    await VerseModal.findByIdAndUpdate(verseId, { $set: { isActive: true } });
+    await VerseModel.findByIdAndUpdate(verseId, { $set: { isActive: true } });
 
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse({
         message: `Active Verse of ${act.name} changed to ${verse.name}`,
       })
@@ -146,10 +179,12 @@ export const changeActiveVerse = async (
 
     // check for cast error
     if (error.name === "CastError") {
-      res.status(500).json(new ErrorResponse(genericActError(error.message)));
+      return res
+        .status(500)
+        .json(new ErrorResponse(genericActError(error.message)));
     }
 
     // responsing with generic error
-    res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
+    return res.status(500).json(new ErrorResponse(ACTS_ERROR.CREATE_ACT_ERROR));
   }
 };

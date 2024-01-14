@@ -3,6 +3,7 @@ import { ErrorResponse } from "./Response";
 import {
   BAD_REQUEST_ERROR,
   INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
 } from "../constants/errorResponeMapping";
 import logger from "../config/Logger";
 import { ValidationRules } from "./typeDefinations";
@@ -125,6 +126,24 @@ export const postRequestValidator =
       logger.error(loggerString("Request validation failed", error));
 
       // on fail send generic error
-      res.status(412).send(new ErrorResponse(INTERNAL_SERVER_ERROR));
+      return res.status(412).send(new ErrorResponse(INTERNAL_SERVER_ERROR));
     }
   };
+
+export const isAdminMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // these user details are submitted by passport strategy
+  const userDetails: any = req["user"];
+
+  // extract useful information
+  const { roleList } = userDetails;
+
+  if (!(roleList && roleList.includes("ADMIN"))) {
+    return res.status(401).json(new ErrorResponse(UNAUTHORIZED));
+  } else {
+    next();
+  }
+};

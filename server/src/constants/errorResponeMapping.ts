@@ -26,6 +26,12 @@ export const BAD_REQUEST_ERROR: ErrorResponseType = {
   errorMessage: "Bad Request",
 };
 
+export const UNAUTHORIZED: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "ERROR-0003",
+  errorMessage: "You are not authorized to access this resource.",
+};
+
 /**
  * Error response for the scenario when an error occurs while creating an Act.
  * @type {ErrorResponseType}
@@ -77,12 +83,42 @@ const WRONG_PASSWORD: ErrorResponseType = {
 };
 
 /**
+ * Error response for the scenario when user name already exists.
+ * @type {ErrorResponseType}
+ */
+const AUTH_USER_ALERADY_EXISTS: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "AUTH-ERROR-0003",
+  errorMessage: "User Already Exists",
+};
+
+const NOT_ADMIN_USER: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "AUTH-ERROR-0004",
+  errorMessage: "User is not admin.",
+};
+
+const THEATER_NOT_FOUND: ErrorResponseType = {
+  statusCode: 401,
+  errorCode: "THEATER-ERROR-0001",
+  errorMessage: "No Theater Exist for given Theater ID",
+};
+
+const USER_ALREADY_IN_LIST: ErrorResponseType = {
+  statusCode: 500,
+  errorCode: "THEATER-ERROR-0002",
+  errorMessage: "User Already Exist in the list",
+};
+
+/**
  * Map containing authentication-related errors.
  * @type {ErrorMap}
  */
 export const AUTH_ERROR: ErrorMap = {
   NO_USER_FOUND: NO_USER_FOUND,
   WRONG_PASSWORD: WRONG_PASSWORD,
+  AUTH_USER_ALERADY_EXISTS: AUTH_USER_ALERADY_EXISTS,
+  NOT_ADMIN_USER: NOT_ADMIN_USER,
 };
 
 /**
@@ -93,6 +129,11 @@ export const ACTS_ERROR: ErrorMap = {
   CREATE_ACT_ERROR: CREATE_ACT_ERROR,
   ACT_ALREADY_EXISTS_ERROR: ACT_ALREADY_EXISTS_ERROR,
   MORE_THAN_ONE_ACTIVE_VERSE_ERROR: MORE_THAN_ONE_ACTIVE_VERSE_ERROR,
+};
+
+export const THEATER_ERROR: ErrorMap = {
+  THEATER_NOT_FOUND: THEATER_NOT_FOUND,
+  USER_ALREADY_IN_LIST: USER_ALREADY_IN_LIST,
 };
 
 /**

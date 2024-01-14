@@ -7,6 +7,7 @@ export interface UserDocument extends Document {
   userName: string;
   hash: string;
   salt: string;
+  roleList: string[];
 }
 
 // Define the schema
@@ -15,7 +16,10 @@ const userSchema = new Schema<UserDocument>({
   userName: { type: String, required: true, unique: true },
   hash: { type: String, required: true },
   salt: { type: String, required: true },
+  roleList: [{ type: String, required: true }],
 });
+
+userSchema.index({ userName: 1 }, { unique: true });
 
 // Create and export the model
 const UserModel = model<UserDocument>("User", userSchema);

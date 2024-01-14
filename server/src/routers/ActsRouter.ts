@@ -1,4 +1,6 @@
 import { Router } from "express";
+import passport from "passport";
+
 import {
   changeActiveVerse,
   createAct,
@@ -23,14 +25,20 @@ class ActsRouter {
     this._router.post(
       ActsRouteEndpoints.CREATE_ACT,
       postRequestValidator(ActValidationRule.createActRequestRule),
+      passport.authenticate("jwt", { session: false }),
       createAct
     );
     this._router.post(
       ActsRouteEndpoints.CHANGE_ACTIVE_VERSE,
       postRequestValidator(ActValidationRule.changeActiveVerseRequestRule),
+      passport.authenticate("jwt", { session: false }),
       changeActiveVerse
     );
-    this._router.get(ActsRouteEndpoints.GET_ALL_ACTS, getAllActs);
+    this._router.get(
+      ActsRouteEndpoints.GET_ALL_ACTS,
+      passport.authenticate("jwt", { session: false }),
+      getAllActs
+    );
   }
 }
 

@@ -33,7 +33,7 @@ import { LOGIN_PAGE_CONFIG } from "@/lib/constant";
 import { LoginAction } from "@/lib/server-action/auth-actions";
 import { useRouter } from "next/navigation";
 
-function SingUpPage() {
+function LoginPage() {
   const router = useRouter();
 
   const [submitError, setSubmitError] = useState("");
@@ -44,7 +44,7 @@ function SingUpPage() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     mode: "onChange",
     resolver: zodResolver(loginFormSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { userName: "", password: "" },
   });
 
   // loading state
@@ -85,6 +85,7 @@ function SingUpPage() {
                 const { name, type, placeholder } = fieldConfig;
                 return (
                   <FormField
+                    key={fieldConfigIndex}
                     disabled={isLoading}
                     control={form.control}
                     name={name}
@@ -121,4 +122,4 @@ function SingUpPage() {
   );
 }
 
-export default SingUpPage;
+export default LoginPage;

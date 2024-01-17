@@ -11,7 +11,6 @@ type loginRequestPayload = {
 export const LoginAction = async (payload: loginRequestPayload) => {
   try {
     const response = await axiosInstance.post(LOGIN_URL, payload);
-    console.log("🚀 ~ LoginAction ~ response:", response);
     return { result: response.data };
   } catch (error: any) {
     const { response } = error;

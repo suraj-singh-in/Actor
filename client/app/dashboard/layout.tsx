@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
-import Header from "@/components/layout/header";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import { DashboardLayout } from "@/components/layout";
 
 export default function RootLayout({
   children,
@@ -24,8 +23,7 @@ export default function RootLayout({
 
   return (
     <>
-      <Header />
-      {children}
+      <DashboardLayout children={children} />
     </>
   );
 }

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 const DashboardPage = () => {
-  return <div>Dashboard</div>;
+  return <div className="p-10">Dashboard</div>;
 };
 
 export default DashboardPage;

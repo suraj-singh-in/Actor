@@ -113,6 +113,60 @@ const getTheaterDetails = async (
   }
 };
 
+const getAllTheaterByUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id: userId } = userDetails;
+
+    // get all the theater where is user
+    const theaters = await TheaterModel.aggregate([
+      {
+        $match: {
+          $or: [{ viewerList: userId }, { editorList: userId }],
+        },
+      },
+      {
+        $lookup: {
+          from: "acts",
+          localField: "_id",
+          foreignField: "theaterId",
+          as: "acts",
+        },
+      },
+      {
+        $addFields: {
+          numberOfActs: { $size: "$acts" },
+        },
+      },
+      {
+        $project: {
+          acts: 0, // Exclude the acts array from the final result if you don't need it
+        },
+      },
+    ]);
+
+    // sending the response
+    return res.status(200).json(
+      new SuccessResponse({
+        data: { theaters },
+      })
+    );
+  } catch (error) {
+    // logging error in case
+    logger.error(loggerString("Error while getting theater detail", error));
+
+    // responsing with generic error
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+  }
+};
+
 const addViewer = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // get theaterId and userId from body
@@ -311,4 +365,11 @@ const cloneTheater = async (
   }
 };
 
-export { createTheater, getTheaterDetails, addViewer, addEditor, cloneTheater };
+export {
+  createTheater,
+  getTheaterDetails,
+  addViewer,
+  addEditor,
+  cloneTheater,
+  getAllTheaterByUser,
+};

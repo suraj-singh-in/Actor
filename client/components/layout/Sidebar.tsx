@@ -11,7 +11,6 @@ const SideBar = () => {
   return (
     <div className="relative hidden h-screen border-r pt-20 md:block w-72">
       {navItem.map((item, itemIndex) => {
-        console.log("🚀 ~ {navItem.map ~ item:", item)
         return (
           <Link
             key={item.title}

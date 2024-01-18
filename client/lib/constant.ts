@@ -23,7 +23,7 @@ export const navItem = [
   {
     title: "User",
     icon: Users,
-    href: "/user",
+    href: "/dashboard/user",
     color: "text-green-500",
   },
   {

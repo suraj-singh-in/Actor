@@ -39,7 +39,8 @@ export const TheaterRouteEndPoints = {
   GET_THEATER_DETAILS: "/getTheaterDetails/:theaterId",
   ADD_VIEWER_TO_THEATER: "/addViewer",
   ADD_EDITOR_TO_THEATER: "/addEditor",
-  CLONE_THEATER:"/cloneTheater"
+  CLONE_THEATER:"/cloneTheater",
+  GET_ALL_THEATER_BY_USER:"/getAllTheaterByUser"
 };
 
 /**

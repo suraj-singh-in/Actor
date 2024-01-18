@@ -1,17 +1,6 @@
 import { LayoutDashboard, ListTodo, Users } from "lucide-react";
+import { LoginPageConfig } from "./types";
 
-type FormFieldConfig = {
-  name: "userName" | "password";
-  type: string;
-  placeholder: string;
-};
-
-type LoginPageConfig = {
-  title: string;
-  description: string;
-  formFieldConfigs: FormFieldConfig[];
-  submitButtonText: string;
-};
 
 export const navItem = [
   {

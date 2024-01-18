@@ -152,10 +152,19 @@ const getAllTheaterByUser = async (
       },
     ]);
 
+    // getting only usefull data
+    const filterTheatersData = theaters.map(
+      ({ name, isAdminTheater, numberOfActs }) => ({
+        name,
+        isAdminTheater,
+        numberOfActs,
+      })
+    );
+
     // sending the response
     return res.status(200).json(
       new SuccessResponse({
-        data: { theaters },
+        data: { theaters: filterTheatersData },
       })
     );
   } catch (error) {

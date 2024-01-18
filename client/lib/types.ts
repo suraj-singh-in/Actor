@@ -18,3 +18,36 @@ export type TypeTheatersListData = {
   createdAt: string;
   theaterId: string;
 };
+
+export type TypeVerse = {
+  _id: string;
+  name: string;
+  response: string;
+  responseType: string;
+  httpCode: number;
+  isActive: boolean;
+  actId: string;
+};
+
+export type TypeAct = {
+  _id: string;
+  name: string;
+  endPoint: string;
+  theaterId: string;
+  method: string;
+  verses: TypeVerse[];
+};
+
+export type TypeTheater = {
+  _id: string;
+  name: string;
+  isAdminTheater: boolean;
+  viewerList: string[];
+  editorList: string[];
+  createdAt: string;
+};
+
+export type TypeTheaterDetails = {
+  theaterDetails: TypeTheater;
+  actDetails: TypeAct[];
+};

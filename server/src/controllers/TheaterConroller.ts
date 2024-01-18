@@ -154,10 +154,12 @@ const getAllTheaterByUser = async (
 
     // getting only usefull data
     const filterTheatersData = theaters.map(
-      ({ name, isAdminTheater, numberOfActs }) => ({
+      ({ name, isAdminTheater, numberOfActs, createdAt, _id }) => ({
         name,
         isAdminTheater,
         numberOfActs,
+        createdAt,
+        theaterId: _id,
       })
     );
 

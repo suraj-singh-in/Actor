@@ -8,17 +8,33 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // types
 import { TypeTheatersListData } from "@/lib/types";
 
+// libs
+import { useRouter } from "next/navigation";
+
 const TheaterInfo = (props: TypeTheatersListData) => {
-  const { name, numberOfActs } = props;
+  const { name, numberOfActs, createdAt, theaterId } = props;
+  const router = useRouter();
+
   return (
-    <Card className="cursor-pointer">
+    <Card
+      className="cursor-pointer"
+      onClick={() => {
+        router.replace(`/dashboard/theater/${theaterId}`);
+      }}
+    >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{name}</CardTitle>
         <Drama />
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{numberOfActs} Acts</div>
-        <p className="text-xs text-muted-foreground">Created: </p>
+        {createdAt ? (
+          <p className="text-xs text-muted-foreground">
+            created on: {new Date(createdAt).toLocaleString()}
+          </p>
+        ) : (
+          <></>
+        )}
       </CardContent>
     </Card>
   );

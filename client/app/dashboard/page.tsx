@@ -1,11 +1,18 @@
 "use client";
 
-// components
+// ui components
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+// page components
 import {
   TheaterInfo,
   TheaterInfoSkeleton,
 } from "@/components/page-components/dashboard/TheaterInfo";
+
+// server actions
 import { getAllTheaterByUser } from "@/lib/server-action/theater-action";
+
+// types
 import { TypeTheatersListData } from "@/lib/types";
 
 // Libraries
@@ -56,14 +63,20 @@ const DashboardPage = () => {
         {!isLoading &&
           theaterDetails &&
           theaterDetails.length > 0 &&
-          theaterDetails.map(
-            (theater: TypeTheatersListData, theaterIndex: number) => (
-              <TheaterInfo {...theater} key={theaterIndex} />
-            )
-          )}
-
-        {!isLoading && !theaterDetails && <div>No Theater Available</div>}
+          theaterDetails.map((theater: TypeTheatersListData) => (
+            <TheaterInfo {...theater} key={theater.theaterId} />
+          ))}
       </div>
+      {!isLoading && theaterDetails.length === 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>No Theater Available</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs ">Why don't you create one?</p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

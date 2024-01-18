@@ -10,6 +10,7 @@ export interface TheaterDocument extends Document {
   isAdminTheater: boolean;
   viewerList: Schema.Types.ObjectId[];
   editorList: Schema.Types.ObjectId[];
+  createdAt: Date;
 }
 
 // Define the schema
@@ -19,6 +20,7 @@ const theaterSchema = new Schema<TheaterDocument>({
   isAdminTheater: { type: Boolean, default: false },
   viewerList: [{ type: Schema.Types.ObjectId, ref: "User" }],
   editorList: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  createdAt: { type: Date, default: Date.now },
 });
 
 //create uniqe index

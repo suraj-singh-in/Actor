@@ -15,4 +15,6 @@ export type TypeTheatersListData = {
   name: string;
   isAdminTheater: boolean;
   numberOfActs: number;
+  createdAt: string;
+  theaterId: string;
 };

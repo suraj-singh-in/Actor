@@ -87,12 +87,12 @@ export const getUserDetails = async (
     const userDetails: any = req["user"];
 
     // extract useful information
-    const { name, userName, roleList } = userDetails;
+    const { name, userName, roleList, _id } = userDetails;
 
     // send 200 response
     return res
       .status(200)
-      .json(new SuccessResponse({ data: { name, userName, roleList } }));
+      .json(new SuccessResponse({ data: { name, userName, roleList, _id } }));
   } catch (error) {
     // logging error in case
     logger.error(loggerString("Error while geting user information", error));

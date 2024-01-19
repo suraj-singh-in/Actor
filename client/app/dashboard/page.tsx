@@ -56,7 +56,10 @@ const DashboardPage = () => {
         <div className="text-3xl font-bold tracking-tight">Dashboard</div>
         <Button>Create New Theater</Button>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 pt-4">
+      <div className="text-xl font-bold tracking-tight py-2 pt-4">
+        Original Theater
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {isLoading &&
           [...new Array(12)].map((_, index) => (
             <TheaterInfoSkeleton key={index} />
@@ -65,9 +68,33 @@ const DashboardPage = () => {
         {!isLoading &&
           theaterList &&
           theaterList.length > 0 &&
-          theaterList.map((theater: TypeTheatersListData) => (
-            <TheaterInfo {...theater} key={theater.theaterId} />
+          theaterList.map((theater: TypeTheatersListData) =>
+            theater.isAdminTheater ? (
+              <TheaterInfo {...theater} key={theater.theaterId} />
+            ) : (
+              <></>
+            )
+          )}
+      </div>
+      <div className="text-xl font-bold tracking-tight py-2 pt-4">
+        Cloned Theater
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
+        {isLoading &&
+          [...new Array(12)].map((_, index) => (
+            <TheaterInfoSkeleton key={index} />
           ))}
+
+        {!isLoading &&
+          theaterList &&
+          theaterList.length > 0 &&
+          theaterList.map((theater: TypeTheatersListData) =>
+            !theater.isAdminTheater ? (
+              <TheaterInfo {...theater} key={theater.theaterId} />
+            ) : (
+              <></>
+            )
+          )}
       </div>
       {!isLoading && theaterList.length === 0 && (
         <Card>

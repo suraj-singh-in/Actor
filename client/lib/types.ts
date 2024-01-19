@@ -35,6 +35,7 @@ export type TypeAct = {
   endPoint: string;
   theaterId: string;
   method: string;
+  theaterName?: string | undefined;
   verses: TypeVerse[];
 };
 

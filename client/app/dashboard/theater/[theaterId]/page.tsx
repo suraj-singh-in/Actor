@@ -38,7 +38,11 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
 
     if (result) {
       const { data } = result;
-      const { theaterDetails, actDetails } = data;
+      let { theaterDetails, actDetails } = data;
+
+      actDetails = actDetails.map((act: TypeAct) => {
+        return { ...act, theaterName: theaterDetails.name };
+      });
 
       setTheaterDetails(theaterDetails);
       setActList(actDetails);

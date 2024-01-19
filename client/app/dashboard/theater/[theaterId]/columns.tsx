@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { getActUrl } from "@/lib/utils";
 
 export const columns: ColumnDef<TypeAct>[] = [
   {
@@ -44,9 +45,13 @@ export const columns: ColumnDef<TypeAct>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(actDetails._id)}
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  getActUrl(actDetails.theaterName || "", actDetails.endPoint)
+                )
+              }
             >
-              Copy Act ID
+              Copy Endpoint
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View Details</DropdownMenuItem>

@@ -307,7 +307,7 @@ const cloneTheater = async (
     const userDetails: any = req["user"];
 
     // get id from userDetails
-    const { _id } = userDetails;
+    const { _id, userName } = userDetails;
 
     // if user is not the editor of the given route, then user cannout edd acts in it
     if (
@@ -319,7 +319,7 @@ const cloneTheater = async (
     // 3. CREATE CLONE THEATER PROPERTIES
     // create properties for cloned theater
     const clonedTheaterPropreties = {
-      name: theater.name + "_" + _id,
+      name: theater.name + "_" + userName,
       isAdminTheater: false,
       logo: theater.logo,
       viewerList: [],

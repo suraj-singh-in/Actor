@@ -89,7 +89,7 @@ const DashboardPage = () => {
     <div className="p-10" suppressHydrationWarning>
       <div className="flex justify-between">
         <div className="text-3xl font-bold tracking-tight">Dashboard</div>
-        <Dialog open={dialogState}>
+        <Dialog open={dialogState} onOpenChange={setDialogState}>
           <DialogTrigger asChild>
             <Button variant="default" onClick={() => setDialogState(true)}>
               Create Theater

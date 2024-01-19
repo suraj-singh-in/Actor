@@ -20,10 +20,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { getTheaterBaseUrl } from "@/lib/utils";
+import { cloneTheater } from "@/lib/server-action/theater-action";
 
 const TheaterInfo = (props: TypeTheatersListData) => {
   const { name, numberOfActs, createdAt, theaterId, isAdminTheater } = props;
   const router = useRouter();
+
+  const handleCloneTheaterClick = async () => {
+    // get headers
+    const headers = {
+      Authorization: localStorage.getItem("ACTOR_TOKEN"),
+    };
+
+    const { result, error } = await cloneTheater({
+      headers,
+      payload: { theaterId },
+    });
+
+    if (result) {
+      const { data } = result;
+      props.onCloneSuccess();
+    }
+  };
 
   return (
     <Card>
@@ -54,9 +72,7 @@ const TheaterInfo = (props: TypeTheatersListData) => {
               View Details
             </DropdownMenuItem>
             {isAdminTheater ? (
-              <DropdownMenuItem
-              // call an api to get cloning done
-              >
+              <DropdownMenuItem onClick={handleCloneTheaterClick}>
                 Clone Theater
               </DropdownMenuItem>
             ) : (

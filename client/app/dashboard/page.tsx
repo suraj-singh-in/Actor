@@ -70,7 +70,11 @@ const DashboardPage = () => {
           theaterList.length > 0 &&
           theaterList.map((theater: TypeTheatersListData) =>
             theater.isAdminTheater ? (
-              <TheaterInfo {...theater} key={theater.theaterId} />
+              <TheaterInfo
+                {...theater}
+                key={theater.theaterId}
+                onCloneSuccess={getDashboarPageData}
+              />
             ) : (
               <></>
             )

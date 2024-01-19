@@ -17,6 +17,7 @@ export type TypeTheatersListData = {
   numberOfActs: number;
   createdAt: string;
   theaterId: string;
+  onCloneSuccess: any;
 };
 
 export type TypeVerse = {

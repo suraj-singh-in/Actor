@@ -1,7 +1,6 @@
 import { LayoutDashboard, ListTodo, Users } from "lucide-react";
 import { LoginPageConfig } from "./types";
 
-
 export const navItem = [
   {
     title: "Dashboard",
@@ -40,3 +39,4 @@ export const LOGIN_PAGE_CONFIG: LoginPageConfig = {
   ],
   submitButtonText: "Login",
 };
+

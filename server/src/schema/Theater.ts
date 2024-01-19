@@ -8,6 +8,7 @@ export interface TheaterDocument extends Document {
   name: string;
   logo: string;
   isAdminTheater: boolean;
+  description: string;
   viewerList: Schema.Types.ObjectId[];
   editorList: Schema.Types.ObjectId[];
   createdAt: Date;
@@ -17,6 +18,7 @@ export interface TheaterDocument extends Document {
 const theaterSchema = new Schema<TheaterDocument>({
   name: { type: String, required: true, unique: true },
   logo: { type: String },
+  description: { type: String },
   isAdminTheater: { type: Boolean, default: false },
   viewerList: [{ type: Schema.Types.ObjectId, ref: "User" }],
   editorList: [{ type: Schema.Types.ObjectId, ref: "User" }],

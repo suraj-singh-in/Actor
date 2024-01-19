@@ -2,12 +2,21 @@
 
 // ui components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // page components
 import {
   TheaterInfo,
   TheaterInfoSkeleton,
 } from "@/components/page-components/dashboard/TheaterInfo";
+import CreateTheaterForm from "./create-theater";
 
 // server actions
 import { getAllTheaterByUser } from "@/lib/server-action/theater-action";
@@ -51,10 +60,23 @@ const DashboardPage = () => {
   }, []);
 
   return (
-    <div className="p-10">
+    <div className="p-10" suppressHydrationWarning>
       <div className="flex justify-between">
         <div className="text-3xl font-bold tracking-tight">Dashboard</div>
-        <Button>Create New Theater</Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="default">Create Theater</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Theater</DialogTitle>
+              <DialogDescription>
+                Enter theater details, and let the play start.
+              </DialogDescription>
+            </DialogHeader>
+            <CreateTheaterForm />
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="text-xl font-bold tracking-tight py-2 pt-4">
         Original Theater
@@ -62,21 +84,25 @@ const DashboardPage = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {isLoading &&
           [...new Array(12)].map((_, index) => (
-            <TheaterInfoSkeleton key={index} />
+            <TheaterInfoSkeleton key={`TheaterInfoSkeleton-${index}`} />
           ))}
 
         {!isLoading &&
           theaterList &&
           theaterList.length > 0 &&
-          theaterList.map((theater: TypeTheatersListData) =>
+          theaterList.map((theater: TypeTheatersListData, index: number) =>
             theater.isAdminTheater ? (
-              <TheaterInfo
-                {...theater}
-                key={theater.theaterId}
-                onCloneSuccess={getDashboarPageData}
-              />
+              <React.Fragment key={`${theater.theaterId}-${index}`}>
+                <TheaterInfo
+                  {...theater}
+                  key={`${theater.theaterId}-${index}`}
+                  onCloneSuccess={getDashboarPageData}
+                />
+              </React.Fragment>
             ) : (
-              <></>
+              <React.Fragment
+                key={`${theater.theaterId}-${index}`}
+              ></React.Fragment>
             )
           )}
       </div>
@@ -86,17 +112,22 @@ const DashboardPage = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {isLoading &&
           [...new Array(12)].map((_, index) => (
-            <TheaterInfoSkeleton key={index} />
+            <TheaterInfoSkeleton key={`TheaterInfoSkeleton-cloned-${index}`} />
           ))}
 
         {!isLoading &&
           theaterList &&
           theaterList.length > 0 &&
-          theaterList.map((theater: TypeTheatersListData) =>
+          theaterList.map((theater: TypeTheatersListData, index: number) =>
             !theater.isAdminTheater ? (
-              <TheaterInfo {...theater} key={theater.theaterId} />
+              <TheaterInfo
+                {...theater}
+                key={`${theater.theaterId}-${index}-cloned`}
+              />
             ) : (
-              <></>
+              <React.Fragment
+                key={`${theater.theaterId}-${index}-cloned`}
+              ></React.Fragment>
             )
           )}
       </div>

@@ -11,6 +11,7 @@ export const MasterRouterRouteMap = {
   THEATER_ROUTE: "/theater",
   MOCK_ROUTE: "/actor",
   AUTH_ROUTER: "/auth",
+  USER_ROUTER: "/user",
 };
 
 export const mockRouteEndpoints = {
@@ -39,8 +40,8 @@ export const TheaterRouteEndPoints = {
   GET_THEATER_DETAILS: "/getTheaterDetails/:theaterId",
   ADD_VIEWER_TO_THEATER: "/addViewer",
   ADD_EDITOR_TO_THEATER: "/addEditor",
-  CLONE_THEATER:"/cloneTheater",
-  GET_ALL_THEATER_BY_USER:"/getAllTheaterByUser"
+  CLONE_THEATER: "/cloneTheater",
+  GET_ALL_THEATER_BY_USER: "/getAllTheaterByUser",
 };
 
 /**
@@ -54,4 +55,8 @@ export const AuthRouterEndPoints = {
   SIGN_UP: "/signup",
   GET_USER_DETAILS: "/getUserDetails",
   LOGIN: "/login",
+};
+
+export const UserRouterEndPoints = {
+  USER_LIST: "/getUserList",
 };

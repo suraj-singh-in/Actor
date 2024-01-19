@@ -13,6 +13,7 @@ const createTheaterRequestRule: ValidationRules = {
   name: "required|string",
   logo: "string",
   isAdminTheater: "required|boolean",
+  description: "string",
   viewerList: "array",
   "viewerList.*": "string|required",
   editorList: "array",

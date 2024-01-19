@@ -37,8 +37,10 @@ const createTheater = async (
     // get id from userDetails
     const { _id } = userDetails;
 
-    //create a new editor list
-    newTheaterData["editorList"] = [_id];
+    //add creater in editor list if not inclueded
+    if (!newTheaterData["editorList"].includes(_id)) {
+      newTheaterData["editorList"].push(_id);
+    }
 
     // creating New Theater
     let newTheater = await TheaterModel.create(newTheaterData);

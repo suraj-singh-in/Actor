@@ -19,8 +19,9 @@ import Loader from "@/components/Loader";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MultiSelect } from "@/components/MultiSelect";
+import { createTheater } from "@/lib/server-action/theater-action";
 
-const CreateTheaterForm = () => {
+const CreateTheaterForm = ({ userList, onSuccess }: any) => {
   const [submitError, setSubmitError] = useState("");
 
   // Form Details
@@ -36,8 +37,24 @@ const CreateTheaterForm = () => {
   const onSubmit: SubmitHandler<z.infer<typeof createTheaterScheam>> = async (
     formData
   ) => {
+    const headers = {
+      Authorization: localStorage.getItem("ACTOR_TOKEN"),
+    };
+
     // submit error submit
-    console.log("🚀 ~ CreateTheaterForm ~ formData:", formData);
+    const values: any = { ...formData };
+    const editorList = formData.editorList.map((editor: any) => editor.value);
+    const viewerList = formData.viewerList.map((viewer: any) => viewer.value);
+    values["editorList"] = editorList;
+    values["viewerList"] = viewerList;
+    values["isAdminTheater"] = true;
+
+    const { result, error } = await createTheater({ payload: values, headers });
+
+    if (result) {
+      const { data } = result;
+      onSuccess();
+    }
   };
 
   return (
@@ -97,7 +114,9 @@ const CreateTheaterForm = () => {
               <FormControl>
                 <MultiSelect
                   selected={field.value}
-                  options={[]}
+                  options={userList.map((user: any) => {
+                    return { value: user._id, label: user.name };
+                  })}
                   placeholder="Viewers"
                   {...field}
                 />
@@ -116,7 +135,9 @@ const CreateTheaterForm = () => {
               <FormControl>
                 <MultiSelect
                   selected={field.value}
-                  options={[]}
+                  options={userList.map((user: any) => {
+                    return { value: user._id, label: user.name };
+                  })}
                   placeholder="Editors"
                   {...field}
                 />

@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 // page components
 import {
@@ -20,16 +21,18 @@ import CreateTheaterForm from "./create-theater";
 
 // server actions
 import { getAllTheaterByUser } from "@/lib/server-action/theater-action";
+import { getUserList } from "@/lib/server-action/user-actions";
 
 // types
 import { TypeTheatersListData } from "@/lib/types";
 
 // Libraries
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 
 const DashboardPage = () => {
   const [theaterList, settheaterList] = useState<TypeTheatersListData[]>([]);
+  const [userList, setUserList] = useState([]);
+  const [dialogState, setDialogState] = useState(false);
 
   // loading state
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -55,17 +58,42 @@ const DashboardPage = () => {
     setIsLoading(false);
   };
 
+  const getUserListData = async () => {
+    const headers = {
+      Authorization: localStorage.getItem("ACTOR_TOKEN"),
+    };
+
+    // server side calls to backend to get current user theater
+    const { result, error } = await getUserList({ headers });
+
+    if (result) {
+      const { data } = result;
+
+      const userList = data.users;
+
+      setUserList(userList);
+    }
+  };
+
+  const onTheaterCreateSuccess = () => {
+    setDialogState(false);
+    getDashboarPageData();
+  };
+
   useEffect(() => {
     getDashboarPageData();
+    getUserListData();
   }, []);
 
   return (
     <div className="p-10" suppressHydrationWarning>
       <div className="flex justify-between">
         <div className="text-3xl font-bold tracking-tight">Dashboard</div>
-        <Dialog>
+        <Dialog open={dialogState}>
           <DialogTrigger asChild>
-            <Button variant="default">Create Theater</Button>
+            <Button variant="default" onClick={() => setDialogState(true)}>
+              Create Theater
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -74,7 +102,10 @@ const DashboardPage = () => {
                 Enter theater details, and let the play start.
               </DialogDescription>
             </DialogHeader>
-            <CreateTheaterForm />
+            <CreateTheaterForm
+              userList={userList}
+              onSuccess={onTheaterCreateSuccess}
+            />
           </DialogContent>
         </Dialog>
       </div>

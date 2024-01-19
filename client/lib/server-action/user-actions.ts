@@ -1,16 +1,11 @@
 "use server";
 
-import axiosInstance from "@/lib/axiosMiddleware";
-import { LOGIN_URL } from "../apiURls";
+import { GET_USER_LIST } from "../apiURls";
+import axiosInstance from "../axiosMiddleware";
 
-type loginRequestPayload = {
-  userName: string;
-  password: string;
-};
-
-export const LoginAction = async (payload: loginRequestPayload) => {
+export const getUserList = async ({ payload, headers }: any) => {
   try {
-    const response = await axiosInstance.post(LOGIN_URL, payload);
+    const response = await axiosInstance.get(GET_USER_LIST, { headers });
     return { result: response.data };
   } catch (error: any) {
     const { response } = error;

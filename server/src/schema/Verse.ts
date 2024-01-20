@@ -9,6 +9,7 @@ export interface VerseDocument extends Document {
   responseType: string;
   actId: Schema.Types.ObjectId;
   isActive?: boolean;
+  description: string;
 }
 
 // Define the schema
@@ -18,6 +19,7 @@ const verseSchema = new Schema<VerseDocument>({
   responseType: { type: String, required: true },
   httpCode: { type: Number, required: true },
   isActive: { type: Boolean },
+  description: { type: String },
   actId: { type: Schema.Types.ObjectId, ref: "Act" },
 });
 

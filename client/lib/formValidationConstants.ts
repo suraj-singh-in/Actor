@@ -24,3 +24,26 @@ export const createTheaterScheam = z.object({
   viewerList: z.array(z.record(z.string().trim())),
   editorList: z.array(z.record(z.string().trim())),
 });
+
+export const verseShema = z.object({
+  name: z
+    .string()
+    .describe("name")
+    .min(6, "Theater Name must be minimum 6 characters"),
+  httpCode: z.coerce.number().describe("httpCode"),
+  responseType: z.string().describe("responseType").nonempty(),
+  description: z.string().describe("description").nonempty(),
+  response: z.string().describe("response").nonempty(),
+  isActive: z.boolean(),
+});
+
+export const createActSchema = z.object({
+  name: z
+    .string()
+    .describe("name")
+    .min(6, "Theater Name must be minimum 6 characters"),
+  endPoint: z.string().describe("endPoint").nonempty(),
+  method: z.string().describe("method").nonempty(),
+  description: z.string().describe("description").nonempty(),
+  verses: z.array(verseShema).min(1, "Atleast one verse is requried"),
+});

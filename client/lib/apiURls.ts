@@ -10,5 +10,8 @@ export const GET_THEATER_DETAILS = (theaterId: string) =>
   `${baseURL}/theater/getTheaterDetails/${theaterId}`;
 export const CLONE_THEATER = `${baseURL}/theater/cloneTheater`;
 
+// acts
+export const CREATE_ACT = `${baseURL}/acts/create`;
+
 // user
 export const GET_USER_LIST = `${baseURL}/user/getUserList`;

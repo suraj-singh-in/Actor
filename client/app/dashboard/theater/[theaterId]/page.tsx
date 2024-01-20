@@ -90,17 +90,25 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
             <Dialog open={dialogState} onOpenChange={setDialogState}>
               <DialogTrigger asChild>
                 <Button variant="default" onClick={() => setDialogState(true)}>
-                  Create Theater
+                  Create Act
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent
+                className={"lg:max-w-screen-lg overflow-y-scroll max-h-screen"}
+              >
                 <DialogHeader>
                   <DialogTitle>
                     Create New Act in {theaterDetails?.name}
                   </DialogTitle>
                   <DialogDescription>Enter API Details here.</DialogDescription>
                 </DialogHeader>
-                <CreateActForm />
+                <CreateActForm
+                  theaterDetails={theaterDetails}
+                  onSuccess={() => {
+                    setDialogState(false);
+                    getTheaterPageData();
+                  }}
+                />
               </DialogContent>
             </Dialog>
           </div>

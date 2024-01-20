@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 // page components
 import {
@@ -33,6 +34,7 @@ const DashboardPage = () => {
   const [theaterList, settheaterList] = useState<TypeTheatersListData[]>([]);
   const [userList, setUserList] = useState([]);
   const [dialogState, setDialogState] = useState(false);
+  const { toast } = useToast();
 
   // loading state
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -55,6 +57,13 @@ const DashboardPage = () => {
       settheaterList(theaters);
     }
 
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
+    }
+
     setIsLoading(false);
   };
 
@@ -72,6 +81,13 @@ const DashboardPage = () => {
       const userList = data.users;
 
       setUserList(userList);
+    }
+
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
     }
   };
 

@@ -6,8 +6,8 @@ function logRequestAndResponse(
   requestConfig: AxiosRequestConfig,
   response: AxiosResponse
 ) {
-  console.log("Request:", requestConfig.data);
-  console.log("Response:", response.data);
+  console.log("Request:", JSON.stringify(requestConfig.data));
+  console.log("Response:", JSON.stringify(response.data));
 }
 
 // Axios instance with request interceptor

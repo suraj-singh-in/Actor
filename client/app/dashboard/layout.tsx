@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/layout";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function RootLayout({
   children,
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <>
       <DashboardLayout children={children} />
+      <Toaster />
     </>
   );
 }

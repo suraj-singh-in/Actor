@@ -13,9 +13,14 @@ import { TypeAct, TypeTheater, TypeTheaterDetails } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
+
+// ui component
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
+  const { toast } = useToast();
+
   // getting theaterID
   const theaterId = params.theaterId;
 
@@ -48,6 +53,13 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
       setActList(actDetails);
     }
 
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
+    }
+
     setIsLoading(false);
   };
 
@@ -63,7 +75,7 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
         <>
           <div className="flex justify-between">
             <div className="text-3xl font-bold tracking-tight">
-              {theaterDetails?.name}
+              {theaterDetails?.name || "Theater Details"}
             </div>
             <Button>Create New Act</Button>
           </div>

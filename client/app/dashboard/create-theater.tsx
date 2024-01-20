@@ -20,9 +20,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MultiSelect } from "@/components/MultiSelect";
 import { createTheater } from "@/lib/server-action/theater-action";
+import { useToast } from "@/components/ui/use-toast";
 
 const CreateTheaterForm = ({ userList, onSuccess }: any) => {
   const [submitError, setSubmitError] = useState("");
+  const { toast } = useToast();
+
 
   // Form Details
   const form = useForm<z.infer<typeof createTheaterScheam>>({
@@ -54,6 +57,13 @@ const CreateTheaterForm = ({ userList, onSuccess }: any) => {
     if (result) {
       const { data } = result;
       onSuccess();
+    }
+
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
     }
   };
 

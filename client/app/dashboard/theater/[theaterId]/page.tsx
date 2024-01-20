@@ -2,6 +2,7 @@
 
 // componets
 import Loader from "@/components/Loader";
+import CreateActForm from "@/components/page-components/dashboard/create-act";
 
 // actions
 import { getTheaterDetails } from "@/lib/server-action/theater-action";
@@ -17,6 +18,14 @@ import { DataTable } from "./data-table";
 // ui component
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   const { toast } = useToast();
@@ -30,6 +39,7 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
 
   // loading state
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [dialogState, setDialogState] = useState<boolean>(false);
 
   const getTheaterPageData = async () => {
     setIsLoading(true);
@@ -77,8 +87,24 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
             <div className="text-3xl font-bold tracking-tight">
               {theaterDetails?.name || "Theater Details"}
             </div>
-            <Button>Create New Act</Button>
+            <Dialog open={dialogState} onOpenChange={setDialogState}>
+              <DialogTrigger asChild>
+                <Button variant="default" onClick={() => setDialogState(true)}>
+                  Create Theater
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    Create New Act in {theaterDetails?.name}
+                  </DialogTitle>
+                  <DialogDescription>Enter API Details here.</DialogDescription>
+                </DialogHeader>
+                <CreateActForm />
+              </DialogContent>
+            </Dialog>
           </div>
+          <div>{theaterDetails?.description}</div>
           <div className="mx-auto py-10">
             <DataTable columns={columns} data={actList} />
           </div>

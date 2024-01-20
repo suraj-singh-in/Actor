@@ -44,6 +44,7 @@ export type TypeTheater = {
   _id: string;
   name: string;
   isAdminTheater: boolean;
+  description?: string;
   viewerList: string[];
   editorList: string[];
   createdAt: string;

@@ -18,7 +18,7 @@ import {
   TheaterInfo,
   TheaterInfoSkeleton,
 } from "@/components/page-components/dashboard/TheaterInfo";
-import CreateTheaterForm from "./create-theater";
+import CreateTheaterForm from "@/components/page-components/dashboard/create-theater";
 
 // server actions
 import { getAllTheaterByUser } from "@/lib/server-action/theater-action";

@@ -87,7 +87,6 @@ const CreateActForm = ({
   const onSubmit: SubmitHandler<z.infer<typeof createActSchema>> = async (
     formData
   ) => {
-    console.log("🚀 ~ CreateActForm ~ formData:", formData);
     const headers = {
       Authorization: localStorage.getItem("ACTOR_TOKEN"),
     };
@@ -117,7 +116,7 @@ const CreateActForm = ({
           if (submitError) setSubmitError("");
         }}
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full sm:justify-center sm:w-[400px] space-y-6 flex flex-col"
+        className="space-y-6 flex flex-col"
       >
         <FormField
           name="name"

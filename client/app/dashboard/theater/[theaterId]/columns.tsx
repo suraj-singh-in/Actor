@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { getActUrl } from "@/lib/utils";
+import Link from "next/link";
 
 export const columns: ColumnDef<TypeAct>[] = [
   {
@@ -30,6 +31,7 @@ export const columns: ColumnDef<TypeAct>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
       const actDetails = row.original;
@@ -54,7 +56,13 @@ export const columns: ColumnDef<TypeAct>[] = [
               Copy Endpoint
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href={`/dashboard/theater/${actDetails.theaterId}/act/${actDetails._id}`}
+              >
+                View Details
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

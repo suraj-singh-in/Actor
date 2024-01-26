@@ -12,7 +12,7 @@ import { TypeAct, TypeTheater, TypeTheaterDetails } from "@/lib/types";
 
 // Libraries
 import React, { useEffect, useState } from "react";
-import { columns } from "./columns";
+import { generateColumns } from "./columns";
 import { DataTable } from "./data-table";
 
 // ui component
@@ -26,6 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import ChangeActiveVerseForm from "@/components/page-components/dashboard/change-active-verse";
 
 const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   const { toast } = useToast();
@@ -40,6 +41,9 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   // loading state
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [dialogState, setDialogState] = useState<boolean>(false);
+
+  const [activeDialogState, setActiveDialogState] = useState<boolean>(false);
+  const [selectedAct, setSelecteAct] = useState<TypeAct>();
 
   const getTheaterPageData = async () => {
     setIsLoading(true);
@@ -71,6 +75,12 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
     }
 
     setIsLoading(false);
+  };
+
+  const handleChangeActiveClick = (row: any) => {
+    console.log("Handle active cliend", row.original);
+    setActiveDialogState(true);
+    setSelecteAct(row.original);
   };
 
   useEffect(() => {
@@ -114,8 +124,24 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
           </div>
           <div>{theaterDetails?.description}</div>
           <div className="mx-auto py-10">
-            <DataTable columns={columns} data={actList} />
+            <DataTable
+              columns={generateColumns({ handleChangeActiveClick })}
+              data={actList}
+            />
           </div>
+          <Dialog open={activeDialogState} onOpenChange={setActiveDialogState}>
+            <DialogContent
+              className={"lg:max-w-screen-lg overflow-y-scroll max-h-screen"}
+            >
+              <DialogHeader>
+                <DialogTitle>Change Active Verse</DialogTitle>
+                <DialogDescription>
+                  Click Submit to commit change
+                </DialogDescription>
+              </DialogHeader>
+              <ChangeActiveVerseForm act={selectedAct} />
+            </DialogContent>
+          </Dialog>
         </>
       ) : (
         <Loader />

@@ -153,6 +153,16 @@ const DashboardPage = () => {
             )
           )}
       </div>
+      {!isLoading && theaterList.length === 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>No Theater Available</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs">Why don't you create one? ☝️</p>
+          </CardContent>
+        </Card>
+      )}
       <div className="text-xl font-bold tracking-tight py-2 pt-4">
         Cloned Theater
       </div>
@@ -184,7 +194,7 @@ const DashboardPage = () => {
             <CardTitle>No Theater Available</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs ">Why don't you create one?</p>
+            <p className="text-xs">Why don't you create one? ☝️</p>
           </CardContent>
         </Card>
       )}

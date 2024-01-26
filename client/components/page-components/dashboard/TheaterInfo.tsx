@@ -21,10 +21,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { getTheaterBaseUrl } from "@/lib/utils";
 import { cloneTheater } from "@/lib/server-action/theater-action";
+import { useToast } from "@/components/ui/use-toast";
 
 const TheaterInfo = (props: TypeTheatersListData) => {
   const { name, numberOfActs, createdAt, theaterId, isAdminTheater } = props;
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleCloneTheaterClick = async () => {
     // get headers
@@ -40,6 +42,13 @@ const TheaterInfo = (props: TypeTheatersListData) => {
     if (result) {
       const { data } = result;
       props.onCloneSuccess();
+    }
+
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
     }
   };
 

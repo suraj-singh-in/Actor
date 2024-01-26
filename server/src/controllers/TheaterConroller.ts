@@ -318,6 +318,17 @@ const cloneTheater = async (
       return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
     }
 
+    // if the theater is already exist send error
+    const checkTheater = await TheaterModel.find({
+      name: theater.name + "_" + userName,
+    });
+
+    if (checkTheater && checkTheater.length) {
+      return res
+        .status(500)
+        .json(new ErrorResponse(THEATER_ERROR.THEATER_ALREADY_CLONED));
+    }
+
     // 3. CREATE CLONE THEATER PROPERTIES
     // create properties for cloned theater
     const clonedTheaterPropreties = {

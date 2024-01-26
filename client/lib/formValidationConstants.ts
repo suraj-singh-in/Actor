@@ -34,7 +34,7 @@ export const verseShema = z.object({
   responseType: z.string().describe("responseType").nonempty(),
   description: z.string().describe("description").nonempty(),
   response: z.string().describe("response").nonempty(),
-  isActive: z.boolean(),
+  isActive: z.boolean().optional(),
 });
 
 export const createActSchema = z.object({

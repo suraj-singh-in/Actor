@@ -39,10 +39,15 @@ import { createTheater } from "@/lib/server-action/theater-action";
 import { Button } from "@/components/ui/button";
 import { createAct } from "@/lib/server-action/act-actions";
 import { TypeTheater } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { Divide, SeparatorHorizontal } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { AccordionContent } from "@radix-ui/react-accordion";
+import { Label } from "@/components/ui/label";
 
 const CreateActForm = ({
   theaterDetails,
@@ -76,13 +81,16 @@ const CreateActForm = ({
     },
   });
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, update, replace } = useFieldArray({
     name: "verses",
     control: form.control,
   });
 
   // loading state
   const isLoading = form.formState.isSubmitting;
+
+  const errors = form.formState.errors;
+  const values = form.getValues().verses;
 
   const onSubmit: SubmitHandler<z.infer<typeof createActSchema>> = async (
     formData
@@ -193,128 +201,124 @@ const CreateActForm = ({
         </div>
         <Separator />
 
-        {fields.map((field, index) => (
-          <React.Fragment key={`verses-container-${index}`}>
-            <FormField
-              name={`verses.${index}.name`}
-              control={form.control}
-              key={field.id}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    Verse Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name={`verses.${index}.httpCode`}
-              control={form.control}
-              key={field.id}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    HTTP code
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} type="number" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name={`verses.${index}.responseType`}
-              control={form.control}
-              key={field.id}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    Respone Type
-                  </FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+        <Accordion type="multiple" className="w-full">
+          {fields.map((field, index) => (
+            <AccordionItem value={`item-${index + 1}`}>
+              <AccordionTrigger>Verse {index + 1}</AccordionTrigger>
+              <AccordionContent key={`verses-container-${index}`}>
+                <FormField
+                  name={`verses.${index}.name`}
+                  control={form.control}
+                  key={field.id}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Verse Name</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="API Method" />
-                        </SelectTrigger>
+                        <Input {...field} />
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="JSON">JSON</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name={`verses.${index}.description`}
-              control={form.control}
-              key={field.id}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    Description
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name={`verses.${index}.response`}
-              control={form.control}
-              key={field.id}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    Response
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder="Please insert stringify JSON, support for JSON field is on way"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name={`verses.${index}.isActive`}
-              control={form.control}
-              key={field.id}
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Active</FormLabel>
-                    <FormDescription>
-                      This is default, hence this is active by default.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={true} aria-readonly />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </React.Fragment>
-        ))}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name={`verses.${index}.httpCode`}
+                  control={form.control}
+                  key={field.id}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>HTTP code</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="number" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name={`verses.${index}.responseType`}
+                  control={form.control}
+                  key={field.id}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Respone Type</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="API Method" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="JSON">JSON</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name={`verses.${index}.description`}
+                  control={form.control}
+                  key={field.id}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name={`verses.${index}.response`}
+                  control={form.control}
+                  key={field.id}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Response</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          placeholder="Please insert stringify JSON, support for JSON field is on way"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name={`verses.${index}.isActive`}
+                  control={form.control}
+                  key={field.id}
+                  render={({ field }) => (
+                    <FormItem className="my-4">
+                      <FormControl>
+                        <Label className="flex items-center gap-2 text-xs font-normal">
+                          <Switch
+                            checked={field.value ? true : false}
+                            onCheckedChange={field.onChange}
+                            disabled={index ? true : false}
+                          />
+                          Active
+                        </Label>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
         <Button
           type="button"
           variant="outline"
           size="sm"
-          disabled={fields.length ? true : false}
           className="mt-2"
           onClick={() =>
             append({
@@ -323,7 +327,7 @@ const CreateActForm = ({
               httpCode: 200,
               responseType: "",
               response: "",
-              isActive: true,
+              isActive: false,
             })
           }
         >

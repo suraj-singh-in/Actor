@@ -49,6 +49,12 @@ import {
 import { AccordionContent } from "@radix-ui/react-accordion";
 import { Label } from "@/components/ui/label";
 
+import AceEditor from "react-ace";
+
+import "ace-builds/src-noconflict/mode-json5";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/ext-language_tools";
+
 const CreateActForm = ({
   theaterDetails,
   onSuccess,
@@ -282,9 +288,28 @@ const CreateActForm = ({
                     <FormItem>
                       <FormLabel>Response</FormLabel>
                       <FormControl>
-                        <Textarea
-                          {...field}
-                          placeholder="Please insert stringify JSON, support for JSON field is on way"
+                        <AceEditor
+                          placeholder="Enter JSON"
+                          mode="json"
+                          theme="github"
+                          name="blah2"
+                          onLoad={() => {
+                            console.log("this.onLoad");
+                          }}
+                          onChange={field.onChange}
+                          fontSize={16}
+                          showPrintMargin={true}
+                          showGutter={true}
+                          highlightActiveLine={true}
+                          setOptions={{
+                            enableBasicAutocompletion: true,
+                            enableLiveAutocompletion: true,
+                            enableSnippets: false,
+                            showLineNumbers: true,
+                            tabSize: 2,
+                            useWorker: false,
+                          }}
+                          style={{ width: "100%", height: "200px" }}
                         />
                       </FormControl>
                       <FormMessage />

@@ -364,7 +364,7 @@ const CreateActForm = ({
           size="lg"
           disabled={isLoading}
         >
-          {!isLoading ? "Create" : <Loader />}
+          {!isLoading ? isEdit ? "Edit" : "Create" : <Loader />}
         </Button>
       </form>
     </Form>

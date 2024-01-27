@@ -11,6 +11,7 @@ import {
 } from "../constants/errorResponeMapping";
 import VerseModel from "../schema/Verse";
 import TheaterModel from "../schema/Theater";
+import mongoose from "mongoose";
 
 export const getAllActs = async (
   req: Request,
@@ -174,14 +175,27 @@ export const editAct = async (
       newActData
     );
 
-    allVerses.forEach(async (verse: any) => {
-      await VerseModel.findOneAndUpdate({ _id: verse._id }, verse);
+    const formmatedVerses = allVerses.map(({ ...rest }) => ({
+      actId: newActData.actId,
+      ...rest,
+    }));
+
+    formmatedVerses.forEach(async (verse: any) => {
+      await VerseModel.findOneAndUpdate(
+        { _id: verse._id ?? new mongoose.Types.ObjectId() },
+        verse,
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
     });
 
     //  sending success response
     return res.status(200).json(
       new SuccessResponse({
-        message: "Act Edited Successfullyt",
+        message: "Act Edited Successfully!",
       })
     );
   } catch (error) {

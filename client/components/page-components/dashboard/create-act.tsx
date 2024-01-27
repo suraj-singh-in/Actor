@@ -118,7 +118,10 @@ const CreateActForm = ({
       const { result, error } = await editAct({ payload: values, headers });
 
       if (result) {
-        const { data } = result;
+        toast({
+          title: "Successfully Edited",
+          description: result.message,
+        });
         onSuccessEdit();
       }
 

@@ -63,6 +63,16 @@ const MORE_THAN_ONE_ACTIVE_VERSE_ERROR: ErrorResponseType = {
 };
 
 /**
+ * Error response for the scenario when an error occurs while editing an Act.
+ * @type {ErrorResponseType}
+ */
+const EDIT_ACT_ERROR: ErrorResponseType = {
+  statusCode: 500,
+  errorCode: "ACT-ERROR-0005",
+  errorMessage: "Error while Editing an act",
+};
+
+/**
  * Error response for the scenario when no user is found during authentication.
  * @type {ErrorResponseType}
  */
@@ -133,6 +143,7 @@ export const AUTH_ERROR: ErrorMap = {
  */
 export const ACTS_ERROR: ErrorMap = {
   CREATE_ACT_ERROR: CREATE_ACT_ERROR,
+  EDIT_ACT_ERROR: EDIT_ACT_ERROR,
   ACT_ALREADY_EXISTS_ERROR: ACT_ALREADY_EXISTS_ERROR,
   MORE_THAN_ONE_ACTIVE_VERSE_ERROR: MORE_THAN_ONE_ACTIVE_VERSE_ERROR,
 };

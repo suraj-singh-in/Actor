@@ -12,6 +12,7 @@ export const CLONE_THEATER = `${baseURL}/theater/cloneTheater`;
 
 // acts
 export const CREATE_ACT = `${baseURL}/acts/create`;
+export const EDIT_ACT = `${baseURL}/acts/edit`;
 
 // user
 export const GET_USER_LIST = `${baseURL}/user/getUserList`;

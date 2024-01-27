@@ -26,7 +26,7 @@ const ChangeActiveVerseForm = ({
   act,
   onSuccess,
 }: {
-  act: TypeAct | undefined;
+  act: TypeAct | undefined | null;
   onSuccess: any;
 }) => {
   const [submitError, setSubmitError] = useState("");

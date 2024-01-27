@@ -18,6 +18,7 @@ import Link from "next/link";
 
 export const generateColumns = ({
   handleChangeActiveClick,
+  handleActEdit,
 }: any): ColumnDef<TypeAct>[] => {
   const columns: ColumnDef<TypeAct>[] = [
     {
@@ -67,7 +68,11 @@ export const generateColumns = ({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleChangeActiveClick(row)}>
-                Change Active
+                Change Active Verse
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleActEdit(row)}>
+                Edit Act
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

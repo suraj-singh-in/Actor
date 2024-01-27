@@ -26,6 +26,7 @@ export const createTheaterScheam = z.object({
 });
 
 export const verseShema = z.object({
+  _id: z.string().optional(),
   name: z
     .string()
     .describe("name")

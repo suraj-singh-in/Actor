@@ -117,6 +117,89 @@ export const createAct = async (
   }
 };
 
+export const editAct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Getting body
+    const newActData = req.body;
+
+    // get theater from theater id
+    const theater = await TheaterModel.findOne({ _id: newActData.theaterId });
+
+    // if theater does note exist
+    if (!theater) {
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id } = userDetails;
+
+    // if user is not the editor of the given route, then user cannout edd acts in it
+    if (!theater.editorList.includes(_id)) {
+      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
+    }
+
+    // Check if the act Exist
+    const currentActDetails = await ActModel.findById(newActData.actId);
+
+    if (!currentActDetails) {
+      return res.status(400).json(new ErrorResponse(BAD_REQUEST_ERROR));
+    }
+
+    // get all the verse from the request
+    const allVerses = newActData.verses;
+
+    // get all active verse
+    let activeVerse = allVerses.filter((verse) => verse.isActive);
+
+    // if more or less than one active verse found send error
+    if (activeVerse.length !== 1) {
+      return res
+        .status(500)
+        .json(new ErrorResponse(ACTS_ERROR.MORE_THAN_ONE_ACTIVE_VERSE_ERROR));
+    }
+
+    // Updating Act Details
+    await ActModel.findOneAndUpdate(
+      {
+        _id: newActData.actId,
+        theaterId: newActData.theaterId,
+      },
+      newActData
+    );
+
+    allVerses.forEach(async (verse: any) => {
+      await VerseModel.findOneAndUpdate({ _id: verse._id }, verse);
+    });
+
+    //  sending success response
+    return res.status(200).json(
+      new SuccessResponse({
+        message: "Act Edited Successfullyt",
+      })
+    );
+  } catch (error) {
+    // logging error in case
+    logger.error(loggerString("Error While Editing Act", error));
+
+    // check for cast error
+    if (error.name === "ValidationError") {
+      return res
+        .status(500)
+        .json(new ErrorResponse(genericActError(error.message)));
+    }
+
+    // responsing with generic error
+    return res.status(500).json(new ErrorResponse(ACTS_ERROR.EDIT_ACT_ERROR));
+  }
+};
+
 export const changeActiveVerse = async (
   req: Request,
   res: Response,

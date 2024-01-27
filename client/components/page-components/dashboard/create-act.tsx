@@ -37,8 +37,8 @@ import { createActSchema } from "@/lib/formValidationConstants";
 // actions
 import { createTheater } from "@/lib/server-action/theater-action";
 import { Button } from "@/components/ui/button";
-import { createAct } from "@/lib/server-action/act-actions";
-import { TypeTheater } from "@/lib/types";
+import { createAct, editAct } from "@/lib/server-action/act-actions";
+import { TypeAct, TypeTheater } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -58,9 +58,15 @@ import "ace-builds/src-noconflict/ext-language_tools";
 const CreateActForm = ({
   theaterDetails,
   onSuccess,
+  isEdit,
+  onSuccessEdit,
+  selectedAct,
 }: {
   theaterDetails: TypeTheater | undefined;
   onSuccess: any;
+  onSuccessEdit: any;
+  isEdit: boolean;
+  selectedAct: TypeAct | undefined;
 }) => {
   const [submitError, setSubmitError] = useState("");
   const { toast } = useToast();
@@ -69,22 +75,24 @@ const CreateActForm = ({
   const form = useForm<z.infer<typeof createActSchema>>({
     mode: "onChange",
     resolver: zodResolver(createActSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      endPoint: "",
-      method: "",
-      verses: [
-        {
+    defaultValues: isEdit
+      ? selectedAct
+      : {
           name: "",
           description: "",
-          httpCode: 200,
-          responseType: "",
-          response: "",
-          isActive: true,
+          endPoint: "",
+          method: "",
+          verses: [
+            {
+              name: "",
+              description: "",
+              httpCode: 200,
+              responseType: "",
+              response: "",
+              isActive: true,
+            },
+          ],
         },
-      ],
-    },
   });
 
   const { fields, append, update, replace } = useFieldArray({
@@ -108,18 +116,36 @@ const CreateActForm = ({
     const values: any = { ...formData };
     values["theaterId"] = theaterDetails?._id;
 
-    const { result, error } = await createAct({ payload: values, headers });
+    if (isEdit) {
+      values["actId"] = selectedAct?._id;
 
-    if (result) {
-      const { data } = result;
-      onSuccess();
-    }
+      const { result, error } = await editAct({ payload: values, headers });
 
-    if (error) {
-      toast({
-        title: "Uh oh! Something went wrong.",
-        description: error,
-      });
+      if (result) {
+        const { data } = result;
+        onSuccessEdit();
+      }
+
+      if (error) {
+        toast({
+          title: "Uh oh! Something went wrong.",
+          description: error,
+        });
+      }
+    } else {
+      const { result, error } = await createAct({ payload: values, headers });
+
+      if (result) {
+        const { data } = result;
+        onSuccess();
+      }
+
+      if (error) {
+        toast({
+          title: "Uh oh! Something went wrong.",
+          description: error,
+        });
+      }
     }
   };
 
@@ -292,6 +318,7 @@ const CreateActForm = ({
                             console.log("this.onLoad");
                           }}
                           onChange={field.onChange}
+                          value={field.value}
                           fontSize={16}
                           showPrintMargin={true}
                           showGutter={true}

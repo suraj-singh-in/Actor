@@ -38,6 +38,15 @@ const createActRequestRule: ValidationRules = {
 };
 
 /**
+ * Validation rules for editing an Act request.
+ * @type {ValidationRules}
+ */
+const editActRequestRule: ValidationRules = {
+  actId: "required|string",
+  ...createActRequestRule,
+};
+
+/**
  * Validation rules for changing the active verse in an Act request.
  * @type {ValidationRules}
  */
@@ -92,6 +101,7 @@ const TheaterValidationRule: validationRulesMap = {
  */
 const ActValidationRule: validationRulesMap = {
   createActRequestRule: createActRequestRule,
+  editActRequestRule: editActRequestRule,
   changeActiveVerseRequestRule: changeActiveVerseRequestRule,
 };
 

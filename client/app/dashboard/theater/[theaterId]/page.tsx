@@ -45,6 +45,8 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   const [activeDialogState, setActiveDialogState] = useState<boolean>(false);
   const [selectedAct, setSelecteAct] = useState<TypeAct>();
 
+  const [isEditActMode, setIsEditActMode] = useState<boolean>(false);
+
   const getTheaterPageData = async () => {
     setIsLoading(true);
 
@@ -83,6 +85,19 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
     setSelecteAct(row.original);
   };
 
+  const handleActEdit = (row: any) => {
+    setSelecteAct(row.original);
+    setIsEditActMode(true);
+    setDialogState(true);
+  };
+
+  useEffect(() => {
+    if (!dialogState) {
+      setIsEditActMode(false);
+      setSelecteAct(undefined);
+    }
+  }, [dialogState]);
+
   useEffect(() => {
     getTheaterPageData();
   }, []);
@@ -108,13 +123,21 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
               >
                 <DialogHeader>
                   <DialogTitle>
-                    Create New Act in {theaterDetails?.name}
+                    {isEditActMode
+                      ? `Edit Act ${selectedAct?.name}`
+                      : `Create New Act in ${theaterDetails?.name}`}
                   </DialogTitle>
                   <DialogDescription>Enter API Details here.</DialogDescription>
                 </DialogHeader>
                 <CreateActForm
                   theaterDetails={theaterDetails}
+                  selectedAct={selectedAct}
                   onSuccess={() => {
+                    setDialogState(false);
+                    getTheaterPageData();
+                  }}
+                  isEdit={isEditActMode}
+                  onSuccessEdit={() => {
                     setDialogState(false);
                     getTheaterPageData();
                   }}
@@ -125,7 +148,10 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
           <div>{theaterDetails?.description}</div>
           <div className="mx-auto py-10">
             <DataTable
-              columns={generateColumns({ handleChangeActiveClick })}
+              columns={generateColumns({
+                handleChangeActiveClick,
+                handleActEdit,
+              })}
               data={actList}
             />
           </div>

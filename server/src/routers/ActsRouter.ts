@@ -4,6 +4,7 @@ import passport from "passport";
 import {
   changeActiveVerse,
   createAct,
+  editAct,
   getAllActs,
 } from "../controllers/ActsController";
 import { ActsRouteEndpoints } from "../config/constants";
@@ -27,6 +28,12 @@ class ActsRouter {
       postRequestValidator(ActValidationRule.createActRequestRule),
       passport.authenticate("jwt", { session: false }),
       createAct
+    );
+    this._router.post(
+      ActsRouteEndpoints.EDIT_ACT,
+      postRequestValidator(ActValidationRule.editActRequestRule),
+      passport.authenticate("jwt", { session: false }),
+      editAct
     );
     this._router.post(
       ActsRouteEndpoints.CHANGE_ACTIVE_VERSE,

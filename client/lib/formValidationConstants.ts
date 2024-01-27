@@ -47,3 +47,7 @@ export const createActSchema = z.object({
   description: z.string().describe("description").nonempty(),
   verses: z.array(verseShema).min(1, "Atleast one verse is requried"),
 });
+
+export const changeActiveVerseSchema = z.object({
+  verseId: z.string(),
+});

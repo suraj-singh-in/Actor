@@ -15,3 +15,6 @@ export const CREATE_ACT = `${baseURL}/acts/create`;
 
 // user
 export const GET_USER_LIST = `${baseURL}/user/getUserList`;
+
+// verse
+export const CHANGE_ACTIVE_VERSE = `${baseURL}/acts/changeActiveVerse`;

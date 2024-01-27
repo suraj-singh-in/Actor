@@ -139,7 +139,13 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
                   Click Submit to commit change
                 </DialogDescription>
               </DialogHeader>
-              <ChangeActiveVerseForm act={selectedAct} />
+              <ChangeActiveVerseForm
+                act={selectedAct}
+                onSuccess={() => {
+                  setActiveDialogState(false);
+                  getTheaterPageData();
+                }}
+              />
             </DialogContent>
           </Dialog>
         </>

@@ -215,7 +215,6 @@ const CreateActForm = ({
                 <FormField
                   name={`verses.${index}.name`}
                   control={form.control}
-                  key={field.id}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Verse Name</FormLabel>
@@ -229,7 +228,6 @@ const CreateActForm = ({
                 <FormField
                   name={`verses.${index}.httpCode`}
                   control={form.control}
-                  key={field.id}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>HTTP code</FormLabel>
@@ -243,7 +241,6 @@ const CreateActForm = ({
                 <FormField
                   name={`verses.${index}.responseType`}
                   control={form.control}
-                  key={field.id}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Respone Type</FormLabel>
@@ -269,7 +266,6 @@ const CreateActForm = ({
                 <FormField
                   name={`verses.${index}.description`}
                   control={form.control}
-                  key={field.id}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Description</FormLabel>
@@ -283,7 +279,6 @@ const CreateActForm = ({
                 <FormField
                   name={`verses.${index}.response`}
                   control={form.control}
-                  key={field.id}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Response</FormLabel>
@@ -319,7 +314,6 @@ const CreateActForm = ({
                 <FormField
                   name={`verses.${index}.isActive`}
                   control={form.control}
-                  key={field.id}
                   render={({ field }) => (
                     <FormItem className="my-4">
                       <FormControl>

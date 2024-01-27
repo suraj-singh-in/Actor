@@ -37,8 +37,10 @@ const createTheater = async (
     // get id from userDetails
     const { _id } = userDetails;
 
-    //create a new editor list
-    newTheaterData["editorList"] = [_id];
+    //add creater in editor list if not inclueded
+    if (!newTheaterData["editorList"].includes(_id)) {
+      newTheaterData["editorList"].push(_id);
+    }
 
     // creating New Theater
     let newTheater = await TheaterModel.create(newTheaterData);
@@ -107,6 +109,71 @@ const getTheaterDetails = async (
   } catch (error) {
     // logging error in case
     logger.error(loggerString("Error While getting theater details", error));
+
+    // responsing with generic error
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+  }
+};
+
+const getAllTheaterByUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // these user details are submitted by passport strategy
+    const userDetails: any = req["user"];
+
+    // get id from userDetails
+    const { _id: userId } = userDetails;
+
+    // get all the theater where is user
+    const theaters = await TheaterModel.aggregate([
+      {
+        $match: {
+          $or: [{ viewerList: userId }, { editorList: userId }],
+        },
+      },
+      {
+        $lookup: {
+          from: "acts",
+          localField: "_id",
+          foreignField: "theaterId",
+          as: "acts",
+        },
+      },
+      {
+        $addFields: {
+          numberOfActs: { $size: "$acts" },
+        },
+      },
+      {
+        $project: {
+          acts: 0, // Exclude the acts array from the final result if you don't need it
+        },
+      },
+    ]);
+
+    // getting only usefull data
+    const filterTheatersData = theaters.map(
+      ({ name, isAdminTheater, numberOfActs, createdAt, _id }) => ({
+        name,
+        isAdminTheater,
+        numberOfActs,
+        createdAt,
+        theaterId: _id,
+      })
+    );
+
+    // sending the response
+    return res.status(200).json(
+      new SuccessResponse({
+        data: { theaters: filterTheatersData },
+      })
+    );
+  } catch (error) {
+    // logging error in case
+    logger.error(loggerString("Error while getting theater detail", error));
 
     // responsing with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
@@ -242,7 +309,7 @@ const cloneTheater = async (
     const userDetails: any = req["user"];
 
     // get id from userDetails
-    const { _id } = userDetails;
+    const { _id, userName } = userDetails;
 
     // if user is not the editor of the given route, then user cannout edd acts in it
     if (
@@ -251,10 +318,21 @@ const cloneTheater = async (
       return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
     }
 
+    // if the theater is already exist send error
+    const checkTheater = await TheaterModel.find({
+      name: theater.name + "_" + userName,
+    });
+
+    if (checkTheater && checkTheater.length) {
+      return res
+        .status(500)
+        .json(new ErrorResponse(THEATER_ERROR.THEATER_ALREADY_CLONED));
+    }
+
     // 3. CREATE CLONE THEATER PROPERTIES
     // create properties for cloned theater
     const clonedTheaterPropreties = {
-      name: theater.name + "_" + _id,
+      name: theater.name + "_" + userName,
       isAdminTheater: false,
       logo: theater.logo,
       viewerList: [],
@@ -311,4 +389,11 @@ const cloneTheater = async (
   }
 };
 
-export { createTheater, getTheaterDetails, addViewer, addEditor, cloneTheater };
+export {
+  createTheater,
+  getTheaterDetails,
+  addViewer,
+  addEditor,
+  cloneTheater,
+  getAllTheaterByUser,
+};

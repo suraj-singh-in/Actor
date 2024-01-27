@@ -110,6 +110,12 @@ const USER_ALREADY_IN_LIST: ErrorResponseType = {
   errorMessage: "User Already Exist in the list",
 };
 
+const THEATER_ALREADY_CLONED: ErrorResponseType = {
+  statusCode: 500,
+  errorCode: "THEATER-ERROR-0003",
+  errorMessage: "Theater Already cloned",
+};
+
 /**
  * Map containing authentication-related errors.
  * @type {ErrorMap}
@@ -134,6 +140,7 @@ export const ACTS_ERROR: ErrorMap = {
 export const THEATER_ERROR: ErrorMap = {
   THEATER_NOT_FOUND: THEATER_NOT_FOUND,
   USER_ALREADY_IN_LIST: USER_ALREADY_IN_LIST,
+  THEATER_ALREADY_CLONED: THEATER_ALREADY_CLONED,
 };
 
 /**

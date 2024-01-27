@@ -7,6 +7,7 @@ import {
   addViewer,
   cloneTheater,
   createTheater,
+  getAllTheaterByUser,
   getTheaterDetails,
 } from "../controllers/TheaterConroller";
 import {
@@ -62,6 +63,11 @@ class TheaterRouter {
       TheaterRouteEndPoints.GET_THEATER_DETAILS,
       passport.authenticate("jwt", { session: false }),
       getTheaterDetails
+    );
+    this._router.get(
+      TheaterRouteEndPoints.GET_ALL_THEATER_BY_USER,
+      passport.authenticate("jwt", { session: false }),
+      getAllTheaterByUser
     );
   }
 }

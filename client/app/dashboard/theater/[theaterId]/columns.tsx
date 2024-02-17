@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { getActUrl } from "@/lib/utils";
+import { getActCurl, getActUrl } from "@/lib/utils";
 import Link from "next/link";
 
 export const generateColumns = ({
@@ -58,6 +58,13 @@ export const generateColumns = ({
                 }
               >
                 Copy Endpoint
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(getActCurl(actDetails))
+                }
+              >
+                Copy CURL
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>

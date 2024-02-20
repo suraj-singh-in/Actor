@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Response } from "express";
 import { ErrorResponse, SuccessResponse } from "../utils/Response";
 import logger from "../config/Logger";
 import {
@@ -7,11 +7,27 @@ import {
   THEATER_ERROR,
   UNAUTHORIZED,
 } from "../constants/errorResponeMapping";
-import TheaterModel from "../schema/Theater";
+import TheaterModel, { TheaterDocument } from "../schema/Theater";
 import { loggerString } from "../utils/helperMethods";
 import ActModel from "../schema/Act";
 import VerseModel from "../schema/Verse";
 import UserModel from "../schema/User";
+import PermissionModel from "../schema/Permission";
+
+const generateTheaterPermissions = async (theater: TheaterDocument) => {
+  const editPermission = {
+    name: `${theater.name} Edit`,
+    key: `${theater.name}_edit`,
+    description: `Edit Permission for Theater ${theater.name}`,
+  };
+  const viewPermission = {
+    name: `${theater.name} View`,
+    key: `${theater.name}_view`,
+    description: `View Permission for Theater ${theater.name}`,
+  };
+  await PermissionModel.create(editPermission);
+  await PermissionModel.create(viewPermission);
+};
 
 /**
  * Create a new theater based on the provided request data.
@@ -19,14 +35,9 @@ import UserModel from "../schema/User";
  * @async
  * @param {Request} req - The Express request object.
  * @param {Response} res - The Express response object.
- * @param {NextFunction} next - The next middleware function.
- * @returns {Promise<void> } - A promise that resolves once the theater is created and the response is sent.
+ * @returns { } - A promise that resolves once the theater is created and the response is sent.
  */
-const createTheater = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const createTheater = async (req: Request, res: Response): Promise<any> => {
   try {
     // getting body
     const newTheaterData = req.body;
@@ -37,13 +48,16 @@ const createTheater = async (
     // get id from userDetails
     const { _id } = userDetails;
 
-    //add creater in editor list if not inclueded
+    //add creator in editor list if not included
     if (!newTheaterData["editorList"].includes(_id)) {
       newTheaterData["editorList"].push(_id);
     }
 
     // creating New Theater
     let newTheater = await TheaterModel.create(newTheaterData);
+
+    // Create new permissions for the theater
+    await generateTheaterPermissions(newTheater);
 
     //  sending success response
     return res.status(200).json(
@@ -56,21 +70,17 @@ const createTheater = async (
     // logging error in case
     logger.error(loggerString("Error While Creating Theater", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const getTheaterDetails = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getTheaterDetails = async (req: Request, res: Response) => {
   try {
     // get project and route name from path
     const theaterId = req.params.theaterId;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -110,16 +120,12 @@ const getTheaterDetails = async (
     // logging error in case
     logger.error(loggerString("Error While getting theater details", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const getAllTheaterByUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getAllTheaterByUser = async (req: Request, res: Response) => {
   try {
     // these user details are submitted by passport strategy
     const userDetails: any = req["user"];
@@ -154,7 +160,7 @@ const getAllTheaterByUser = async (
       },
     ]);
 
-    // getting only usefull data
+    // getting only useful data
     const filterTheatersData = theaters.map(
       ({ name, isAdminTheater, numberOfActs, createdAt, _id }) => ({
         name,
@@ -175,17 +181,17 @@ const getAllTheaterByUser = async (
     // logging error in case
     logger.error(loggerString("Error while getting theater detail", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const addViewer = async (req: Request, res: Response, next: NextFunction) => {
+const addViewer = async (req: Request, res: Response) => {
   try {
     // get theaterId and userId from body
     const { theaterId, userId } = req.body;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -225,17 +231,17 @@ const addViewer = async (req: Request, res: Response, next: NextFunction) => {
     // logging error in case
     logger.error(loggerString("Error While adding user to viewer list", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const addEditor = async (req: Request, res: Response, next: NextFunction) => {
+const addEditor = async (req: Request, res: Response) => {
   try {
     // get theaterId and userId from body
     const { theaterId, userId } = req.body;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -279,22 +285,18 @@ const addEditor = async (req: Request, res: Response, next: NextFunction) => {
     // logging error in case
     logger.error(loggerString("Error While adding user to editor list", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const cloneTheater = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const cloneTheater = async (req: Request, res: Response) => {
   try {
     // 1. CHECK IF THE THEATER EXISTS
     // get theaterId from body
     const { theaterId } = req.body;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -311,7 +313,7 @@ const cloneTheater = async (
     // get id from userDetails
     const { _id, userName } = userDetails;
 
-    // if user is not the editor of the given route, then user cannout edd acts in it
+    // if user is not the editor of the given route, then user cannot edd acts in it
     if (
       !(theater.viewerList.includes(_id) || theater.editorList.includes(_id))
     ) {
@@ -331,7 +333,7 @@ const cloneTheater = async (
 
     // 3. CREATE CLONE THEATER PROPERTIES
     // create properties for cloned theater
-    const clonedTheaterPropreties = {
+    const clonedTheaterProperties = {
       name: theater.name + "_" + userName,
       isAdminTheater: false,
       logo: theater.logo,
@@ -340,7 +342,7 @@ const cloneTheater = async (
     };
 
     // create a new cloned theater
-    const clonedTheater = await TheaterModel.create(clonedTheaterPropreties);
+    const clonedTheater = await TheaterModel.create(clonedTheaterProperties);
 
     // 4. Retrieve acts associated with the original theater
     const originalActs = await ActModel.find({
@@ -384,7 +386,7 @@ const cloneTheater = async (
     // logging error in case
     logger.error(loggerString("Error While cloning the theater", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };

@@ -52,3 +52,13 @@ export const createActSchema = z.object({
 export const changeActiveVerseSchema = z.object({
   verseId: z.string(),
 });
+
+export const createRoleFormSchema = z.object({
+  name: z.string().describe("name").min(6, "Role must be minimum 6 characters"),
+  description: z.string().describe("description"),
+  permissions: z
+    .array(z.string())
+    .refine((value) => value.some((item) => item), {
+      message: "You have to select at least one permission.",
+    }),
+});

@@ -19,3 +19,9 @@ export const GET_USER_LIST = `${baseURL}/user/getUserList`;
 
 // verse
 export const CHANGE_ACTIVE_VERSE = `${baseURL}/acts/changeActiveVerse`;
+
+// permissions
+export const GET_ALL_PERMISSIONS = `${baseURL}/permission/getAll`;
+
+// role
+export const CREATE_ROLE = `${baseURL}/role/create`

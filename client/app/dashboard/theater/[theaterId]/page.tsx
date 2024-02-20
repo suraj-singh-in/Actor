@@ -80,7 +80,6 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   };
 
   const handleChangeActiveClick = (row: any) => {
-    console.log("Handle active cliend", row.original);
     setActiveDialogState(true);
     setSelecteAct(row.original);
   };

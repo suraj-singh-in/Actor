@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 export type FormFieldConfig = {
   name: "userName" | "password";
   type: string;
@@ -9,6 +11,13 @@ export type LoginPageConfig = {
   description: string;
   formFieldConfigs: FormFieldConfig[];
   submitButtonText: string;
+};
+
+export type NavigationItemType = {
+  title: string;
+  href: string;
+  color: string;
+  icon: LucideIcon;
 };
 
 export type TypeTheatersListData = {
@@ -53,4 +62,9 @@ export type TypeTheater = {
 export type TypeTheaterDetails = {
   theaterDetails: TypeTheater;
   actDetails: TypeAct[];
+};
+
+export type TypePermissionOption = {
+  label: string;
+  id: string;
 };

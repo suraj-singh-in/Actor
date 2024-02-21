@@ -3,6 +3,7 @@
 // componets
 import Loader from "@/components/Loader";
 import CreateActForm from "@/components/page-components/dashboard/create-act";
+import { DataTable } from "@/components/data-table";
 
 // actions
 import { getTheaterDetails } from "@/lib/server-action/theater-action";
@@ -13,7 +14,6 @@ import { TypeAct, TypeTheater, TypeTheaterDetails } from "@/lib/types";
 // Libraries
 import React, { useEffect, useState } from "react";
 import { generateColumns } from "./columns";
-import { DataTable } from "./data-table";
 
 // ui component
 import { Button } from "@/components/ui/button";

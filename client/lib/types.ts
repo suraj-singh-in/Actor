@@ -68,3 +68,10 @@ export type TypePermissionOption = {
   label: string;
   id: string;
 };
+
+export type TypeRole = {
+  name: string;
+  key: string;
+  description: string;
+  permissions: any[];
+};

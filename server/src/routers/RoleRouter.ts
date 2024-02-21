@@ -3,7 +3,8 @@ import { Router } from "express";
 import { RoleRouterEndPoints } from "../config/constants";
 import { RoleValidationRule } from "../constants/requestValidationRules";
 
-import { createRole } from "../controllers/RoleController";
+import { createRole, getAllRoles } from "../controllers/RoleController";
+
 import {
   isAdminMiddleware,
   postRequestValidator,
@@ -30,6 +31,12 @@ class RoleRouter {
       passport.authenticate("jwt", { session: false }),
       isAdminMiddleware,
       createRole
+    );
+    this._router.get(
+      RoleRouterEndPoints.GET_ALL,
+      passport.authenticate("jwt", { session: false }),
+      isAdminMiddleware,
+      getAllRoles
     );
   }
 }

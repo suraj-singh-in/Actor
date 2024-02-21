@@ -21,7 +21,7 @@ export const getAllPermissions = async (
     );
   } catch (error) {
     // logging error in case
-    logger.error(loggerString("Error While Creating Theater", error));
+    logger.error(loggerString("Error While getting permissions", error));
 
     // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));

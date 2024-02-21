@@ -13,11 +13,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { getAllPermissions } from "@/lib/server-action/permission-actions";
 
+// components
 import CreateRoleForm from "@/components/page-components/dashboard/create-role";
 
-import { TypePermissionOption } from "@/lib/types";
+// types
+import { TypePermissionOption, TypeRole } from "@/lib/types";
+
+// actions
+import { getAllPermissions } from "@/lib/server-action/permission-actions";
+import { getAllRoles } from "@/lib/server-action/role-actions";
+import { DataTable } from "@/components/data-table";
+import { generateColumns } from "./columns";
 
 const RolePage = () => {
   const [dialogState, setDialogState] = useState<boolean>(false);
@@ -26,6 +33,7 @@ const RolePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [permissions, setPermissions] = useState<TypePermissionOption[]>([]);
+  const [roleList, setRoleList] = useState<TypeRole[]>([]);
 
   const { toast } = useToast();
 
@@ -41,15 +49,10 @@ const RolePage = () => {
 
     if (result) {
       const { data } = result;
-      console.log("🚀 ~ getPermissions ~ data:", data);
 
       const formattedPermission = data.map((item: any) => {
         return { label: item.name, id: item._id };
       });
-      console.log(
-        "🚀 ~ formattedPermission ~ formattedPermission:",
-        formattedPermission
-      );
 
       setPermissions(formattedPermission);
     }
@@ -64,8 +67,35 @@ const RolePage = () => {
     setIsLoading(false);
   };
 
+  const getRoleList = async (): Promise<void> => {
+    setIsLoading(true);
+
+    const headers = {
+      Authorization: localStorage.getItem("ACTOR_TOKEN"),
+    };
+
+    // server side calls to backend to get current user theater
+    const { result, error } = await getAllRoles({ headers });
+
+    if (result) {
+      const { data } = result;
+
+      setRoleList(data);
+    }
+
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
+    }
+
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     getPermissions();
+    getRoleList();
   }, []);
 
   const onRoleCreateSuccess = () => {
@@ -93,6 +123,9 @@ const RolePage = () => {
             />
           </DialogContent>
         </Dialog>
+      </div>
+      <div className="mx-auto py-10">
+        <DataTable columns={generateColumns()} data={roleList} />
       </div>
     </div>
   );

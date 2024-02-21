@@ -25,4 +25,5 @@ export const GET_ALL_PERMISSIONS = `${baseURL}/permission/getAll`;
 
 // role
 export const CREATE_ROLE = `${baseURL}/role/create`;
+export const EDIT_ROLE = `${baseURL}/role/edit`;
 export const GET_ALL_ROLES = `${baseURL}/role/getAll`;

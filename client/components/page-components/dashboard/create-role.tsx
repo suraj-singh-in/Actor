@@ -22,36 +22,52 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { TypePermissionOption } from "@/lib/types";
+import { TypePermissionOption, TypeRole } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
 import { useToast } from "@/components/ui/use-toast";
 
 // actions
-import { createRole } from "@/lib/server-action/role-actions";
+import { createRole, editRole } from "@/lib/server-action/role-actions";
 
 interface ICreateRoleForm {
   permissionsList: TypePermissionOption[];
   onSuccess: any;
+  onSuccessEdit: any;
+  isEdit: boolean;
+  selectedRole?: TypeRole;
 }
 
-const CreateRoleForm = ({ permissionsList, onSuccess }: ICreateRoleForm) => {
+const CreateRoleForm = ({
+  permissionsList,
+  onSuccess,
+  isEdit,
+  selectedRole,
+}: ICreateRoleForm) => {
   const [submitError, setSubmitError] = useState("");
   const { toast } = useToast();
+
+  const permissionList = selectedRole?.permissions.map(
+    (permission) => permission._id
+  );
+  const selectedRoleFormaated = {
+    ...selectedRole,
+    permissions: permissionList,
+  };
 
   // Form Details
   const form = useForm<z.infer<typeof createRoleFormSchema>>({
     mode: "onChange",
     resolver: zodResolver(createRoleFormSchema),
-    defaultValues: { name: "", permissions: [] },
+    defaultValues: isEdit
+      ? selectedRoleFormaated
+      : { name: "", permissions: [] },
   });
 
   // loading state
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit: SubmitHandler<z.infer<typeof createRoleFormSchema>> = async (
-    formData
-  ) => {
+  const handleCreate = async (formData: any): Promise<void> => {
     const headers = {
       Authorization: localStorage.getItem("ACTOR_TOKEN"),
     };
@@ -76,6 +92,45 @@ const CreateRoleForm = ({ permissionsList, onSuccess }: ICreateRoleForm) => {
         title: "Uh oh! Something went wrong.",
         description: error,
       });
+    }
+  };
+
+  const handleEdit = async (formData: any): Promise<void> => {
+    const headers = {
+      Authorization: localStorage.getItem("ACTOR_TOKEN"),
+    };
+
+    const payload = {
+      ...formData,
+      roleId: selectedRole && selectedRole._id,
+      key: formData.name
+        .toLowerCase()
+        .replace(/ /g, "-")
+        .replace(/[^\w-]+/g, ""),
+    };
+
+    const { result, error } = await editRole({ payload, headers });
+
+    if (result) {
+      const { data } = result;
+      onSuccess();
+    }
+
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
+    }
+  };
+
+  const onSubmit: SubmitHandler<z.infer<typeof createRoleFormSchema>> = async (
+    formData
+  ) => {
+    if (isEdit) {
+      await handleEdit(formData);
+    } else {
+      await handleCreate(formData);
     }
   };
 

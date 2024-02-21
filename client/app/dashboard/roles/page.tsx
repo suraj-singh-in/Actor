@@ -28,6 +28,8 @@ import { generateColumns } from "./columns";
 
 const RolePage = () => {
   const [dialogState, setDialogState] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState<TypeRole>();
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   // loading state
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -93,12 +95,26 @@ const RolePage = () => {
     setIsLoading(false);
   };
 
+  const handleViewDetailsClick = (row: any): void => {
+    setSelectedRole(row);
+    setIsEditMode(true);
+    setDialogState(true);
+  };
+
   useEffect(() => {
     getPermissions();
     getRoleList();
   }, []);
 
+  useEffect(() => {
+    if (!dialogState) {
+      setIsEditMode(false);
+      setSelectedRole(undefined);
+    }
+  }, [dialogState]);
+
   const onRoleCreateSuccess = () => {
+    getRoleList();
     setDialogState(false);
   };
 
@@ -120,12 +136,21 @@ const RolePage = () => {
             <CreateRoleForm
               permissionsList={permissions}
               onSuccess={onRoleCreateSuccess}
+              isEdit={isEditMode}
+              selectedRole={selectedRole}
+              onSuccessEdit={() => {
+                setDialogState(false);
+                getRoleList();
+              }}
             />
           </DialogContent>
         </Dialog>
       </div>
       <div className="mx-auto py-10">
-        <DataTable columns={generateColumns()} data={roleList} />
+        <DataTable
+          columns={generateColumns({ handleViewDetailsClick })}
+          data={roleList}
+        />
       </div>
     </div>
   );

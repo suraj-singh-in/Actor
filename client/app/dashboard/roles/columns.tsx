@@ -15,7 +15,9 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
-export const generateColumns = (): ColumnDef<TypeRole>[] => {
+export const generateColumns = ({
+  handleViewDetailsClick,
+}: any): ColumnDef<TypeRole>[] => {
   const columns: ColumnDef<TypeRole>[] = [
     {
       accessorKey: "name",
@@ -45,8 +47,10 @@ export const generateColumns = (): ColumnDef<TypeRole>[] => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Link href={`/dashboard/theater/`}>View Details</Link>
+              <DropdownMenuItem
+                onClick={() => handleViewDetailsClick(roleDetails)}
+              >
+                View Details
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

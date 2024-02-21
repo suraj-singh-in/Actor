@@ -43,7 +43,7 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   const [dialogState, setDialogState] = useState<boolean>(false);
 
   const [activeDialogState, setActiveDialogState] = useState<boolean>(false);
-  const [selectedAct, setSelecteAct] = useState<TypeAct>();
+  const [selectedAct, setSelectedAct] = useState<TypeAct>();
 
   const [isEditActMode, setIsEditActMode] = useState<boolean>(false);
 
@@ -81,11 +81,11 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
 
   const handleChangeActiveClick = (row: any) => {
     setActiveDialogState(true);
-    setSelecteAct(row.original);
+    setSelectedAct(row.original);
   };
 
   const handleActEdit = (row: any) => {
-    setSelecteAct(row.original);
+    setSelectedAct(row.original);
     setIsEditActMode(true);
     setDialogState(true);
   };
@@ -93,7 +93,7 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   useEffect(() => {
     if (!dialogState) {
       setIsEditActMode(false);
-      setSelecteAct(undefined);
+      setSelectedAct(undefined);
     }
   }, [dialogState]);
 

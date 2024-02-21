@@ -1,4 +1,4 @@
-import {ValidationRules, validationRulesMap} from "../utils/typeDefinations";
+import { ValidationRules, validationRulesMap } from "../utils/typeDefinations";
 
 /**
  * Represents the validation rules for creating a theater request.
@@ -10,14 +10,14 @@ import {ValidationRules, validationRulesMap} from "../utils/typeDefinations";
  * @property {string} isAdminTheater - The required boolean property indicating admin property.
  */
 const createTheaterRequestRule: ValidationRules = {
-    name: "required|string",
-    logo: "string",
-    isAdminTheater: "required|boolean",
-    description: "string",
-    viewerList: "array",
-    "viewerList.*": "string|required",
-    editorList: "array",
-    "editorList.*": "string|required",
+  name: "required|string",
+  logo: "string",
+  isAdminTheater: "required|boolean",
+  description: "string",
+  viewerList: "array",
+  "viewerList.*": "string|required",
+  editorList: "array",
+  "editorList.*": "string|required",
 };
 
 /**
@@ -25,16 +25,16 @@ const createTheaterRequestRule: ValidationRules = {
  * @type {ValidationRules}
  */
 const createActRequestRule: ValidationRules = {
-    name: "required|string",
-    endPoint: "required|string",
-    theaterId: "required|string",
-    method: "required|string",
-    verses: "required|array",
-    "verses.*.name": "string|required",
-    "verses.*.response": "string|required",
-    "verses.*.httpCode": "required|numeric",
-    "verses.*.responseType": "string|required",
-    "verses.*.isActive": "boolean",
+  name: "required|string",
+  endPoint: "required|string",
+  theaterId: "required|string",
+  method: "required|string",
+  verses: "required|array",
+  "verses.*.name": "string|required",
+  "verses.*.response": "string|required",
+  "verses.*.httpCode": "required|numeric",
+  "verses.*.responseType": "string|required",
+  "verses.*.isActive": "boolean",
 };
 
 /**
@@ -42,8 +42,8 @@ const createActRequestRule: ValidationRules = {
  * @type {ValidationRules}
  */
 const editActRequestRule: ValidationRules = {
-    actId: "required|string",
-    ...createActRequestRule,
+  actId: "required|string",
+  ...createActRequestRule,
 };
 
 /**
@@ -51,8 +51,8 @@ const editActRequestRule: ValidationRules = {
  * @type {ValidationRules}
  */
 const changeActiveVerseRequestRule: ValidationRules = {
-    actId: "required|string",
-    verseId: "required|string",
+  actId: "required|string",
+  verseId: "required|string",
 };
 
 /**
@@ -60,20 +60,20 @@ const changeActiveVerseRequestRule: ValidationRules = {
  * @type {ValidationRules}
  */
 const registerUserRequestRule: ValidationRules = {
-    userName: "required|string",
-    name: "required|string",
-    password: "required|string",
-    roleList: "array",
-    "roleList.*": "required|string",
+  userName: "required|string",
+  name: "required|string",
+  password: "required|string",
+  roleList: "array",
+  "roleList.*": "required|string",
 };
 
 const editViewerOrEditorListRequestRule: ValidationRules = {
-    theaterId: "required|string",
-    userId: "required|string",
+  theaterId: "required|string",
+  userId: "required|string",
 };
 
 const cloneTheaterRequestRule: ValidationRules = {
-    theaterId: "required|string",
+  theaterId: "required|string",
 };
 
 /**
@@ -81,22 +81,33 @@ const cloneTheaterRequestRule: ValidationRules = {
  * @type {ValidationRules}
  */
 const loginUserRequestRule: ValidationRules = {
-    userName: "required|string",
-    password: "required|string",
+  userName: "required|string",
+  password: "required|string",
 };
 
 const createRoleRule: ValidationRules = {
-    name: "required|string"
-}
+  name: "required|string",
+  key: "required|string",
+  permissions: "array",
+  "permissions.*": "required|string",
+};
+
+const editRequestRule: ValidationRules = {
+  name: "required|string",
+  key: "required|string",
+  roleId: "required|string",
+  permissions: "array",
+  "permissions.*": "required|string",
+};
 
 /**
  * Validation rules map for Theater-realted requests.
  * @type {Object} TheaterValidationRule
  */
 const TheaterValidationRule: validationRulesMap = {
-    createTheaterRequestRule: createTheaterRequestRule,
-    editViewerOrEditorListRequestRule: editViewerOrEditorListRequestRule,
-    cloneTheaterRequestRule: cloneTheaterRequestRule,
+  createTheaterRequestRule: createTheaterRequestRule,
+  editViewerOrEditorListRequestRule: editViewerOrEditorListRequestRule,
+  cloneTheaterRequestRule: cloneTheaterRequestRule,
 };
 
 /**
@@ -104,9 +115,9 @@ const TheaterValidationRule: validationRulesMap = {
  * @type {ValidationRulesMap}
  */
 const ActValidationRule: validationRulesMap = {
-    createActRequestRule: createActRequestRule,
-    editActRequestRule: editActRequestRule,
-    changeActiveVerseRequestRule: changeActiveVerseRequestRule,
+  createActRequestRule: createActRequestRule,
+  editActRequestRule: editActRequestRule,
+  changeActiveVerseRequestRule: changeActiveVerseRequestRule,
 };
 
 /**
@@ -114,12 +125,18 @@ const ActValidationRule: validationRulesMap = {
  * @type {ValidationRulesMap}
  */
 const AuthValidationRule: validationRulesMap = {
-    registerUserRequestRule: registerUserRequestRule,
-    loginUserRequestRule: loginUserRequestRule,
+  registerUserRequestRule: registerUserRequestRule,
+  loginUserRequestRule: loginUserRequestRule,
 };
 
 const RoleValidationRule: validationRulesMap = {
-    createRoleRule: createRoleRule
-}
+  createRoleRule: createRoleRule,
+  editRequestRule: editRequestRule,
+};
 
-export {TheaterValidationRule, ActValidationRule, AuthValidationRule, RoleValidationRule};
+export {
+  TheaterValidationRule,
+  ActValidationRule,
+  AuthValidationRule,
+  RoleValidationRule,
+};

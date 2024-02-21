@@ -70,6 +70,7 @@ export type TypePermissionOption = {
 };
 
 export type TypeRole = {
+  _id?: string;
   name: string;
   key: string;
   description: string;

@@ -17,12 +17,8 @@ export const createTheaterScheam = z.object({
     .string()
     .describe("name")
     .min(6, "Theater Name must be minimum 6 characters"),
-
   logo: z.string().describe("logo"),
-
   description: z.string().describe("description"),
-  viewerList: z.array(z.record(z.string().trim())),
-  editorList: z.array(z.record(z.string().trim())),
 });
 
 export const verseShema = z.object({
@@ -51,4 +47,14 @@ export const createActSchema = z.object({
 
 export const changeActiveVerseSchema = z.object({
   verseId: z.string(),
+});
+
+export const createRoleFormSchema = z.object({
+  name: z.string().describe("name").min(2, "Role must be minimum 2 characters"),
+  description: z.string().describe("description"),
+  permissions: z
+    .array(z.string())
+    .refine((value) => value.some((item) => item), {
+      message: "You have to select at least one permission.",
+    }),
 });

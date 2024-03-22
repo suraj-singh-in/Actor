@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Response } from "express";
 import { ErrorResponse, SuccessResponse } from "../utils/Response";
 import logger from "../config/Logger";
 import {
@@ -7,11 +7,12 @@ import {
   THEATER_ERROR,
   UNAUTHORIZED,
 } from "../constants/errorResponeMapping";
-import TheaterModel from "../schema/Theater";
-import { loggerString } from "../utils/helperMethods";
+import TheaterModel, { TheaterDocument } from "../schema/Theater";
+import { getUserPermissions, loggerString } from "../utils/helperMethods";
 import ActModel from "../schema/Act";
 import VerseModel from "../schema/Verse";
 import UserModel from "../schema/User";
+import PermissionModel from "../schema/Permission";
 
 /**
  * Create a new theater based on the provided request data.
@@ -19,14 +20,9 @@ import UserModel from "../schema/User";
  * @async
  * @param {Request} req - The Express request object.
  * @param {Response} res - The Express response object.
- * @param {NextFunction} next - The next middleware function.
- * @returns {Promise<void> } - A promise that resolves once the theater is created and the response is sent.
+ * @returns { } - A promise that resolves once the theater is created and the response is sent.
  */
-const createTheater = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const createTheater = async (req: Request, res: Response): Promise<any> => {
   try {
     // getting body
     const newTheaterData = req.body;
@@ -37,10 +33,24 @@ const createTheater = async (
     // get id from userDetails
     const { _id } = userDetails;
 
-    //add creater in editor list if not inclueded
-    if (!newTheaterData["editorList"].includes(_id)) {
-      newTheaterData["editorList"].push(_id);
-    }
+    // Create new permissions for the theater
+    const editPermissionData = {
+      name: `${newTheaterData.name} Edit`,
+      key: `${newTheaterData.name}_edit`,
+      description: `Edit Permission for Theater ${newTheaterData.name}`,
+    };
+
+    const viewPermissionData = {
+      name: `${newTheaterData.name} View`,
+      key: `${newTheaterData.name}_view`,
+      description: `View Permission for Theater ${newTheaterData.name}`,
+    };
+
+    const editPermission = await PermissionModel.create(editPermissionData);
+    const viewPermission = await PermissionModel.create(viewPermissionData);
+
+    newTheaterData["viewPermission"] = viewPermission._id;
+    newTheaterData["editPermission"] = editPermission._id;
 
     // creating New Theater
     let newTheater = await TheaterModel.create(newTheaterData);
@@ -56,21 +66,17 @@ const createTheater = async (
     // logging error in case
     logger.error(loggerString("Error While Creating Theater", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const getTheaterDetails = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getTheaterDetails = async (req: Request, res: Response) => {
   try {
     // get project and route name from path
     const theaterId = req.params.theaterId;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -110,16 +116,12 @@ const getTheaterDetails = async (
     // logging error in case
     logger.error(loggerString("Error While getting theater details", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const getAllTheaterByUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getAllTheaterByUser = async (req: Request, res: Response) => {
   try {
     // these user details are submitted by passport strategy
     const userDetails: any = req["user"];
@@ -127,11 +129,24 @@ const getAllTheaterByUser = async (
     // get id from userDetails
     const { _id: userId } = userDetails;
 
+    const userPermissions = await getUserPermissions(userId);
+
+    const userPermissionsIds = userPermissions.map(
+      (permission) => permission._id
+    );
+    console.log(
+      "🚀 ~ getAllTheaterByUser ~ userPermissionsIds:",
+      userPermissionsIds
+    );
+
     // get all the theater where is user
-    const theaters = await TheaterModel.aggregate([
+    let viewTheaters = await TheaterModel.aggregate([
       {
         $match: {
-          $or: [{ viewerList: userId }, { editorList: userId }],
+          $and: [
+            { viewPermission: { $in: userPermissionsIds } },
+            { editPermission: { $nin: userPermissionsIds } },
+          ],
         },
       },
       {
@@ -154,8 +169,44 @@ const getAllTheaterByUser = async (
       },
     ]);
 
-    // getting only usefull data
-    const filterTheatersData = theaters.map(
+    let editTheaters = await TheaterModel.aggregate([
+      {
+        $match: {
+          $and: [{ editPermission: { $in: userPermissionsIds } }],
+        },
+      },
+      {
+        $lookup: {
+          from: "acts",
+          localField: "_id",
+          foreignField: "theaterId",
+          as: "acts",
+        },
+      },
+      {
+        $addFields: {
+          numberOfActs: { $size: "$acts" },
+        },
+      },
+      {
+        $project: {
+          acts: 0, // Exclude the acts array from the final result if you don't need it
+        },
+      },
+    ]);
+
+    // getting only useful data
+    viewTheaters = viewTheaters.map(
+      ({ name, isAdminTheater, numberOfActs, createdAt, _id }) => ({
+        name,
+        isAdminTheater,
+        numberOfActs,
+        createdAt,
+        theaterId: _id,
+      })
+    );
+
+    editTheaters = editTheaters.map(
       ({ name, isAdminTheater, numberOfActs, createdAt, _id }) => ({
         name,
         isAdminTheater,
@@ -168,24 +219,24 @@ const getAllTheaterByUser = async (
     // sending the response
     return res.status(200).json(
       new SuccessResponse({
-        data: { theaters: filterTheatersData },
+        data: { theaters: { viewTheaters, editTheaters } },
       })
     );
   } catch (error) {
     // logging error in case
     logger.error(loggerString("Error while getting theater detail", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const addViewer = async (req: Request, res: Response, next: NextFunction) => {
+const addViewer = async (req: Request, res: Response) => {
   try {
     // get theaterId and userId from body
     const { theaterId, userId } = req.body;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -203,15 +254,15 @@ const addViewer = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(500).json(new ErrorResponse(AUTH_ERROR.NO_USER_FOUND));
     }
 
-    // check if user is already in the list
-    if (theater.viewerList.includes(userId)) {
-      return res
-        .status(500)
-        .json(new ErrorResponse(THEATER_ERROR.USER_ALREADY_IN_LIST));
-    }
+    // TODO! check if user is already in the list
+    // if (theater.viewerList.includes(userId)) {
+    //   return res
+    //     .status(500)
+    //     .json(new ErrorResponse(THEATER_ERROR.USER_ALREADY_IN_LIST));
+    // }
 
-    // Add the user to the viewerList
-    theater.viewerList.push(userId);
+    // // Add the user to the viewerList
+    // theater.viewerList.push(userId);
 
     // Save the updated theater document
     await theater.save();
@@ -225,17 +276,17 @@ const addViewer = async (req: Request, res: Response, next: NextFunction) => {
     // logging error in case
     logger.error(loggerString("Error While adding user to viewer list", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const addEditor = async (req: Request, res: Response, next: NextFunction) => {
+const addEditor = async (req: Request, res: Response) => {
   try {
     // get theaterId and userId from body
     const { theaterId, userId } = req.body;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -257,15 +308,15 @@ const addEditor = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json(new ErrorResponse(AUTH_ERROR.NOT_ADMIN_USER));
     }
 
-    // check if user is already in the list
-    if (theater.editorList.includes(userId)) {
-      return res
-        .status(500)
-        .json(new ErrorResponse(THEATER_ERROR.USER_ALREADY_IN_LIST));
-    }
+    // TODO // check if user is already in the list
+    // if (theater.editorList.includes(userId)) {
+    //   return res
+    //     .status(500)
+    //     .json(new ErrorResponse(THEATER_ERROR.USER_ALREADY_IN_LIST));
+    // }
 
-    // Add the user to the editorList
-    theater.editorList.push(userId);
+    // // Add the user to the editorList
+    // theater.editorList.push(userId);
 
     // Save the updated theater document
     await theater.save();
@@ -279,22 +330,18 @@ const addEditor = async (req: Request, res: Response, next: NextFunction) => {
     // logging error in case
     logger.error(loggerString("Error While adding user to editor list", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
 
-const cloneTheater = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const cloneTheater = async (req: Request, res: Response) => {
   try {
     // 1. CHECK IF THE THEATER EXISTS
     // get theaterId from body
     const { theaterId } = req.body;
 
-    // get Theater from Id
+    // get Theater from ID
     const theater = await TheaterModel.findById(theaterId);
 
     // send error if no theater found
@@ -311,12 +358,12 @@ const cloneTheater = async (
     // get id from userDetails
     const { _id, userName } = userDetails;
 
-    // if user is not the editor of the given route, then user cannout edd acts in it
-    if (
-      !(theater.viewerList.includes(_id) || theater.editorList.includes(_id))
-    ) {
-      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
-    }
+    // TODO if user is not the editor of the given route, then user cannot edd acts in it
+    // if (
+    //   !(theater.viewerList.includes(_id) || theater.editorList.includes(_id))
+    // ) {
+    //   return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
+    // }
 
     // if the theater is already exist send error
     const checkTheater = await TheaterModel.find({
@@ -331,7 +378,7 @@ const cloneTheater = async (
 
     // 3. CREATE CLONE THEATER PROPERTIES
     // create properties for cloned theater
-    const clonedTheaterPropreties = {
+    const clonedTheaterProperties = {
       name: theater.name + "_" + userName,
       isAdminTheater: false,
       logo: theater.logo,
@@ -340,7 +387,7 @@ const cloneTheater = async (
     };
 
     // create a new cloned theater
-    const clonedTheater = await TheaterModel.create(clonedTheaterPropreties);
+    const clonedTheater = await TheaterModel.create(clonedTheaterProperties);
 
     // 4. Retrieve acts associated with the original theater
     const originalActs = await ActModel.find({
@@ -384,7 +431,7 @@ const cloneTheater = async (
     // logging error in case
     logger.error(loggerString("Error While cloning the theater", error));
 
-    // responsing with generic error
+    // responding with generic error
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };

@@ -12,6 +12,8 @@ export const MasterRouterRouteMap = {
   MOCK_ROUTE: "/actor",
   AUTH_ROUTER: "/auth",
   USER_ROUTER: "/user",
+  ROLE_ROUTER: "/role",
+  PERMISSION_ROUTER: "/permission",
 };
 
 export const mockRouteEndpoints = {
@@ -58,6 +60,16 @@ export const AuthRouterEndPoints = {
   LOGIN: "/login",
 };
 
+export const RoleRouterEndPoints = {
+  CREATE: "/create",
+  EDIT: "/edit",
+  GET_ALL: "/getAll",
+};
+
+export const PermissionRouterEndPoints = {
+  GET_ALL: "/getAll",
+  CREATE: "/create",
+};
 export const UserRouterEndPoints = {
   USER_LIST: "/getUserList",
 };

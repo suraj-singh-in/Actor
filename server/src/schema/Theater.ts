@@ -9,8 +9,8 @@ export interface TheaterDocument extends Document {
   logo: string;
   isAdminTheater: boolean;
   description: string;
-  viewerList: Schema.Types.ObjectId[];
-  editorList: Schema.Types.ObjectId[];
+  viewPermission: Schema.Types.ObjectId;
+  editPermission: Schema.Types.ObjectId;
   createdAt: Date;
 }
 
@@ -20,8 +20,8 @@ const theaterSchema = new Schema<TheaterDocument>({
   logo: { type: String },
   description: { type: String },
   isAdminTheater: { type: Boolean, default: false },
-  viewerList: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  editorList: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  viewPermission: { type: Schema.Types.ObjectId, ref: "Permission" },
+  editPermission: { type: Schema.Types.ObjectId, ref: "Permission" },
   createdAt: { type: Date, default: Date.now },
 });
 

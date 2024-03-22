@@ -18,20 +18,18 @@ import { useState } from "react";
 import Loader from "@/components/Loader";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MultiSelect } from "@/components/MultiSelect";
 import { createTheater } from "@/lib/server-action/theater-action";
 import { useToast } from "@/components/ui/use-toast";
 
-const CreateTheaterForm = ({ userList, onSuccess }: any) => {
+const CreateTheaterForm = ({ onSuccess }: any) => {
   const [submitError, setSubmitError] = useState("");
   const { toast } = useToast();
-
 
   // Form Details
   const form = useForm<z.infer<typeof createTheaterScheam>>({
     mode: "onChange",
     resolver: zodResolver(createTheaterScheam),
-    defaultValues: { viewerList: [], editorList: [] },
+    defaultValues: {},
   });
 
   // loading state
@@ -46,10 +44,7 @@ const CreateTheaterForm = ({ userList, onSuccess }: any) => {
 
     // submit error submit
     const values: any = { ...formData };
-    const editorList = formData.editorList.map((editor: any) => editor.value);
-    const viewerList = formData.viewerList.map((viewer: any) => viewer.value);
-    values["editorList"] = editorList;
-    values["viewerList"] = viewerList;
+
     values["isAdminTheater"] = true;
 
     const { result, error } = await createTheater({ payload: values, headers });
@@ -110,47 +105,6 @@ const CreateTheaterForm = ({ userList, onSuccess }: any) => {
             <FormItem>
               <FormControl>
                 <Textarea placeholder="Description" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          disabled={isLoading}
-          control={form.control}
-          name="viewerList"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <MultiSelect
-                  selected={field.value}
-                  options={userList.map((user: any) => {
-                    return { value: user._id, label: user.name };
-                  })}
-                  placeholder="Viewers"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          disabled={isLoading}
-          control={form.control}
-          name="editorList"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <MultiSelect
-                  selected={field.value}
-                  options={userList.map((user: any) => {
-                    return { value: user._id, label: user.name };
-                  })}
-                  placeholder="Editors"
-                  {...field}
-                />
               </FormControl>
               <FormMessage />
             </FormItem>

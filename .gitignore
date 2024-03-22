@@ -2,3 +2,4 @@ node_modules/
 dist/
 coverage/
 id_rsa_priv.pem
+.idea/

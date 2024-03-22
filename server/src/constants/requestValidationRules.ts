@@ -14,10 +14,6 @@ const createTheaterRequestRule: ValidationRules = {
   logo: "string",
   isAdminTheater: "required|boolean",
   description: "string",
-  viewerList: "array",
-  "viewerList.*": "string|required",
-  editorList: "array",
-  "editorList.*": "string|required",
 };
 
 /**
@@ -85,6 +81,21 @@ const loginUserRequestRule: ValidationRules = {
   password: "required|string",
 };
 
+const createRoleRule: ValidationRules = {
+  name: "required|string",
+  key: "required|string",
+  permissions: "array",
+  "permissions.*": "required|string",
+};
+
+const editRequestRule: ValidationRules = {
+  name: "required|string",
+  key: "required|string",
+  roleId: "required|string",
+  permissions: "array",
+  "permissions.*": "required|string",
+};
+
 /**
  * Validation rules map for Theater-realted requests.
  * @type {Object} TheaterValidationRule
@@ -114,4 +125,14 @@ const AuthValidationRule: validationRulesMap = {
   loginUserRequestRule: loginUserRequestRule,
 };
 
-export { TheaterValidationRule, ActValidationRule, AuthValidationRule };
+const RoleValidationRule: validationRulesMap = {
+  createRoleRule: createRoleRule,
+  editRequestRule: editRequestRule,
+};
+
+export {
+  TheaterValidationRule,
+  ActValidationRule,
+  AuthValidationRule,
+  RoleValidationRule,
+};

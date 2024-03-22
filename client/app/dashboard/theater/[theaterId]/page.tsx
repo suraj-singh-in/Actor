@@ -3,6 +3,7 @@
 // componets
 import Loader from "@/components/Loader";
 import CreateActForm from "@/components/page-components/dashboard/create-act";
+import { DataTable } from "@/components/data-table";
 
 // actions
 import { getTheaterDetails } from "@/lib/server-action/theater-action";
@@ -13,7 +14,6 @@ import { TypeAct, TypeTheater, TypeTheaterDetails } from "@/lib/types";
 // Libraries
 import React, { useEffect, useState } from "react";
 import { generateColumns } from "./columns";
-import { DataTable } from "./data-table";
 
 // ui component
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,7 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   const [dialogState, setDialogState] = useState<boolean>(false);
 
   const [activeDialogState, setActiveDialogState] = useState<boolean>(false);
-  const [selectedAct, setSelecteAct] = useState<TypeAct>();
+  const [selectedAct, setSelectedAct] = useState<TypeAct>();
 
   const [isEditActMode, setIsEditActMode] = useState<boolean>(false);
 
@@ -80,13 +80,12 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   };
 
   const handleChangeActiveClick = (row: any) => {
-    console.log("Handle active cliend", row.original);
     setActiveDialogState(true);
-    setSelecteAct(row.original);
+    setSelectedAct(row.original);
   };
 
   const handleActEdit = (row: any) => {
-    setSelecteAct(row.original);
+    setSelectedAct(row.original);
     setIsEditActMode(true);
     setDialogState(true);
   };
@@ -94,7 +93,7 @@ const TheaterDetailsPage = ({ params }: { params: { theaterId: string } }) => {
   useEffect(() => {
     if (!dialogState) {
       setIsEditActMode(false);
-      setSelecteAct(undefined);
+      setSelectedAct(undefined);
     }
   }, [dialogState]);
 

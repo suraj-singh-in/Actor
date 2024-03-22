@@ -1,7 +1,8 @@
-import { LayoutDashboard, ListTodo, Users } from "lucide-react";
-import { LoginPageConfig } from "./types";
+import { LayoutDashboard, UserPlus, UserRoundCog, Users } from "lucide-react";
 
-export const navItem = [
+import { LoginPageConfig, NavigationItemType } from "./types";
+
+export const navItem: NavigationItemType[] = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
@@ -15,9 +16,15 @@ export const navItem = [
     color: "text-green-500",
   },
   {
-    title: "Theater",
-    icon: ListTodo,
-    href: "/theater",
+    title: "Roles",
+    icon: UserRoundCog,
+    href: "/dashboard/roles",
+    color: "text-sky-500",
+  },
+  {
+    title: "Permissions",
+    icon: UserPlus,
+    href: "/dashboard/permissions",
     color: "text-sky-500",
   },
 ];
@@ -39,4 +46,3 @@ export const LOGIN_PAGE_CONFIG: LoginPageConfig = {
   ],
   submitButtonText: "Login",
 };
-

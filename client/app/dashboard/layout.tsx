@@ -1,31 +1,33 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { DashboardLayout } from "@/components/layout";
-import { Toaster } from "@/components/ui/toaster";
+import React, {useEffect} from "react";
+import {useRouter} from "next/navigation";
+import {DashboardLayout} from "@/components/layout";
+import {Toaster} from "@/components/ui/toaster";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const router = useRouter();
+interface IRootLayout {
+    children: React.ReactNode;
+}
 
-  // check if user is logged in
-  useEffect(() => {
-    const token = localStorage.getItem("ACTOR_TOKEN");
+export default function RootLayout({children}: IRootLayout) {
+    const router = useRouter();
 
-    // If token is not present then logut the user
-    if (!token) {
-      router.replace("/login");
-    }
-  }, []);
+    // check if user is logged in
+    useEffect(() => {
+        const token = localStorage.getItem("ACTOR_TOKEN");
 
-  return (
-    <>
-      <DashboardLayout children={children} />
-      <Toaster />
-    </>
-  );
+        // If token is not present then logout the user
+        if (!token && router) {
+            router.replace("/login");
+        }
+    }, [router]);
+
+    return (
+        <>
+            <DashboardLayout>
+                {children}
+            </DashboardLayout>
+            <Toaster/>
+        </>
+    );
 }

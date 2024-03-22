@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 export type FormFieldConfig = {
   name: "userName" | "password";
   type: string;
@@ -11,6 +13,13 @@ export type LoginPageConfig = {
   submitButtonText: string;
 };
 
+export type NavigationItemType = {
+  title: string;
+  href: string;
+  color: string;
+  icon: LucideIcon;
+};
+
 export type TypeTheatersListData = {
   name: string;
   isAdminTheater: boolean;
@@ -18,6 +27,7 @@ export type TypeTheatersListData = {
   createdAt: string;
   theaterId: string;
   onCloneSuccess: any;
+  isViewOnly: boolean;
 };
 
 export type TypeVerse = {
@@ -53,4 +63,17 @@ export type TypeTheater = {
 export type TypeTheaterDetails = {
   theaterDetails: TypeTheater;
   actDetails: TypeAct[];
+};
+
+export type TypePermissionOption = {
+  label: string;
+  id: string;
+};
+
+export type TypeRole = {
+  _id?: string;
+  name: string;
+  key: string;
+  description: string;
+  permissions: any[];
 };

@@ -49,10 +49,10 @@ export const createAct = async (
     // get id from userDetails
     const { _id } = userDetails;
 
-    // if user is not the editor of the given route, then user cannout edd acts in it
-    if (!theater.editorList.includes(_id)) {
-      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
-    }
+    // // if user is not the editor of the given route, then user cannout edd acts in it
+    // if (!theater.editorList.includes(_id)) {
+    //   return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
+    // }
 
     // Check if already exiting act
     const existingAct = await ActModel.findOne({
@@ -141,10 +141,10 @@ export const editAct = async (
     // get id from userDetails
     const { _id } = userDetails;
 
-    // if user is not the editor of the given route, then user cannout edd acts in it
-    if (!theater.editorList.includes(_id)) {
-      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
-    }
+    // // if user is not the editor of the given route, then user cannout edd acts in it
+    // if (!theater.editorList.includes(_id)) {
+    //   return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
+    // }
 
     // Check if the act Exist
     const currentActDetails = await ActModel.findById(newActData.actId);
@@ -244,10 +244,10 @@ export const changeActiveVerse = async (
     // get id from userDetails
     const { _id } = userDetails;
 
-    // if user is not the editor of the given route, then user cannout edd acts in it
-    if (!theater.editorList.includes(_id)) {
-      return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
-    }
+    // // if user is not the editor of the given route, then user cannout edd acts in it
+    // if (!theater.editorList.includes(_id)) {
+    //   return res.status(500).json(new ErrorResponse(UNAUTHORIZED));
+    // }
 
     // check if verse exist
     const verse = await VerseModel.findById(verseId);

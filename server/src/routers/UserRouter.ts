@@ -21,7 +21,6 @@ class UserRouter {
     this._router.get(
       UserRouterEndPoints.USER_LIST,
       passport.authenticate("jwt", { session: false }),
-      isAdminMiddleware,
       getUserList
     );
   }

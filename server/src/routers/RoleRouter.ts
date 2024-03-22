@@ -32,8 +32,8 @@ class RoleRouter {
     this._router.post(
       RoleRouterEndPoints.CREATE,
       postRequestValidator(RoleValidationRule.createRoleRule),
-      passport.authenticate("jwt", { session: false }),
-      isAdminMiddleware,
+      // passport.authenticate("jwt", { session: false }),
+      // isAdminMiddleware,
       createRole
     );
     this._router.post(

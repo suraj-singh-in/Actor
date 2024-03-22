@@ -14,10 +14,6 @@ const createTheaterRequestRule: ValidationRules = {
   logo: "string",
   isAdminTheater: "required|boolean",
   description: "string",
-  viewerList: "array",
-  "viewerList.*": "string|required",
-  editorList: "array",
-  "editorList.*": "string|required",
 };
 
 /**

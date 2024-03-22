@@ -27,3 +27,29 @@ export const getAllPermissions = async (
     return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
   }
 };
+
+export const createPermission = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    // getting body
+    const newPermissionBody = req.body;
+
+    // creating New Theater
+    let newPermission = await PermissionModel.create(newPermissionBody);
+
+    //  sending success response
+    return res.status(200).json(
+      new SuccessResponse({
+        message: "Permission Created Successfully",
+      })
+    );
+  } catch (error) {
+    // logging error in case
+    logger.error(loggerString("Error While creating permission", error));
+
+    // responding with generic error
+    return res.status(500).json(new ErrorResponse(INTERNAL_SERVER_ERROR));
+  }
+};

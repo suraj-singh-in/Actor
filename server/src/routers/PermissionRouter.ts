@@ -4,7 +4,10 @@ import { PermissionRouterEndPoints } from "../config/constants";
 
 import { isAdminMiddleware } from "../utils/helperMethods";
 
-import { getAllPermissions } from "../controllers/PermissionController";
+import {
+  createPermission,
+  getAllPermissions,
+} from "../controllers/PermissionController";
 
 import passport from "passport";
 
@@ -26,6 +29,7 @@ class RoleRouter {
       isAdminMiddleware,
       getAllPermissions
     );
+    this._router.post(PermissionRouterEndPoints.CREATE, createPermission);
   }
 }
 

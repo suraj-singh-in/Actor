@@ -10,7 +10,10 @@ import { ValidationRules } from "./typeDefinations";
 
 import fs from "fs";
 import path from "path";
-import { UserDocument } from "../schema/User";
+import UserModel, { UserDocument } from "../schema/User";
+
+import RoleModel from "../schema/Role";
+import mongoose from "mongoose";
 
 const Validator = require("validatorjs");
 const crypto = require("crypto");
@@ -130,7 +133,7 @@ export const postRequestValidator =
     }
   };
 
-export const isAdminMiddleware = (
+export const isAdminMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -141,9 +144,63 @@ export const isAdminMiddleware = (
   // extract useful information
   const { roleList } = userDetails;
 
-  if (!(roleList && roleList.includes("ADMIN"))) {
+  try {
+    const roles = await RoleModel.find({
+      _id: { $in: roleList },
+      key: "admin",
+    });
+
+    if (roles && roles.length > 0) {
+      next();
+    } else {
+      return res.status(401).json(new ErrorResponse(UNAUTHORIZED));
+    }
+  } catch (error) {
     return res.status(401).json(new ErrorResponse(UNAUTHORIZED));
-  } else {
-    next();
   }
 };
+
+export async function getUserPermissions(userID: string) {
+  try {
+    const userPermissions = await UserModel.aggregate([
+      { $match: { _id: userID } }, // Match the user by ID
+      {
+        $lookup: {
+          // Perform a left outer join with the roles collection
+          from: "roles",
+          localField: "roleList",
+          foreignField: "_id",
+          as: "roles",
+        },
+      },
+      { $unwind: "$roles" }, // Unwind the roles array
+      {
+        $lookup: {
+          // Perform a left outer join with the permissions collection
+          from: "permissions",
+          localField: "roles.permissions",
+          foreignField: "_id",
+          as: "permissions",
+        },
+      },
+      {
+        $project: {
+          // Project only the permission fields
+          _id: 0,
+          permissions: 1,
+        },
+      },
+    ]);
+
+    // Flatten the permissions array
+    const permissions =
+      userPermissions.length > 0
+        ? userPermissions.map((user) => user.permissions).flat()
+        : [];
+
+    return permissions;
+  } catch (error) {
+    console.error("Error getting user permissions:", error);
+    throw error;
+  }
+}

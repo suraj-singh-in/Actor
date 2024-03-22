@@ -68,6 +68,7 @@ export const RoleRouterEndPoints = {
 
 export const PermissionRouterEndPoints = {
   GET_ALL: "/getAll",
+  CREATE: "/create",
 };
 export const UserRouterEndPoints = {
   USER_LIST: "/getUserList",

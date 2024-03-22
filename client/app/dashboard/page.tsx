@@ -31,8 +31,12 @@ import { TypeTheatersListData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 
 const DashboardPage = () => {
-  const [theaterList, settheaterList] = useState<TypeTheatersListData[]>([]);
-  const [userList, setUserList] = useState([]);
+  const [viewTheaterList, setViewtheaterList] = useState<
+    TypeTheatersListData[]
+  >([]);
+  const [editTheaterList, setEditTheaterList] = useState<
+    TypeTheatersListData[]
+  >([]);
   const [dialogState, setDialogState] = useState(false);
   const { toast } = useToast();
 
@@ -52,9 +56,11 @@ const DashboardPage = () => {
     if (result) {
       const { data } = result;
 
-      const theaters: TypeTheatersListData[] = data.theaters;
+      const viewTheaters: TypeTheatersListData[] = data.theaters.viewTheaters;
+      const editTheaters: TypeTheatersListData[] = data.theaters.editTheaters;
 
-      settheaterList(theaters);
+      setViewtheaterList(viewTheaters);
+      setEditTheaterList(editTheaters);
     }
 
     if (error) {
@@ -67,30 +73,6 @@ const DashboardPage = () => {
     setIsLoading(false);
   };
 
-  const getUserListData = async () => {
-    const headers = {
-      Authorization: localStorage.getItem("ACTOR_TOKEN"),
-    };
-
-    // server side calls to backend to get current user theater
-    const { result, error } = await getUserList({ headers });
-
-    if (result) {
-      const { data } = result;
-
-      const userList = data.users;
-
-      setUserList(userList);
-    }
-
-    if (error) {
-      toast({
-        title: "Uh oh! Something went wrong.",
-        description: error,
-      });
-    }
-  };
-
   const onTheaterCreateSuccess = () => {
     setDialogState(false);
     getDashboarPageData();
@@ -98,7 +80,6 @@ const DashboardPage = () => {
 
   useEffect(() => {
     getDashboarPageData();
-    getUserListData();
   }, []);
 
   return (
@@ -118,15 +99,12 @@ const DashboardPage = () => {
                 Enter theater details, and let the play start.
               </DialogDescription>
             </DialogHeader>
-            <CreateTheaterForm
-              userList={userList}
-              onSuccess={onTheaterCreateSuccess}
-            />
+            <CreateTheaterForm onSuccess={onTheaterCreateSuccess} />
           </DialogContent>
         </Dialog>
       </div>
       <div className="text-xl font-bold tracking-tight py-2 pt-4">
-        Original Theater
+        Your Theaters
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {isLoading &&
@@ -135,10 +113,10 @@ const DashboardPage = () => {
           ))}
 
         {!isLoading &&
-          theaterList &&
-          theaterList.length > 0 &&
-          theaterList.map((theater: TypeTheatersListData, index: number) =>
-            theater.isAdminTheater ? (
+          editTheaterList &&
+          editTheaterList.length > 0 &&
+          editTheaterList.map(
+            (theater: TypeTheatersListData, index: number) => (
               <React.Fragment key={`${theater.theaterId}-${index}`}>
                 <TheaterInfo
                   {...theater}
@@ -146,52 +124,39 @@ const DashboardPage = () => {
                   onCloneSuccess={getDashboarPageData}
                 />
               </React.Fragment>
-            ) : (
-              <React.Fragment
-                key={`${theater.theaterId}-${index}`}
-              ></React.Fragment>
+            )
+          )}
+
+        {!isLoading &&
+          viewTheaterList &&
+          viewTheaterList.length > 0 &&
+          viewTheaterList.map(
+            (theater: TypeTheatersListData, index: number) => (
+              <React.Fragment key={`${theater.theaterId}-${index}`}>
+                <TheaterInfo
+                  {...theater}
+                  key={`${theater.theaterId}-${index}`}
+                  onCloneSuccess={getDashboarPageData}
+                  isViewOnly
+                />
+              </React.Fragment>
             )
           )}
       </div>
-      {!isLoading && theaterList.length === 0 && (
+      {!isLoading && editTheaterList.length === 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>No Theater Available</CardTitle>
+            <CardTitle>You Don't have permission to edit any theater</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs">Why don't you create one? ☝️</p>
           </CardContent>
         </Card>
       )}
-      <div className="text-xl font-bold tracking-tight py-2 pt-4">
-        Cloned Theater
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
-        {isLoading &&
-          [...new Array(12)].map((_, index) => (
-            <TheaterInfoSkeleton key={`TheaterInfoSkeleton-cloned-${index}`} />
-          ))}
-
-        {!isLoading &&
-          theaterList &&
-          theaterList.length > 0 &&
-          theaterList.map((theater: TypeTheatersListData, index: number) =>
-            !theater.isAdminTheater ? (
-              <TheaterInfo
-                {...theater}
-                key={`${theater.theaterId}-${index}-cloned`}
-              />
-            ) : (
-              <React.Fragment
-                key={`${theater.theaterId}-${index}-cloned`}
-              ></React.Fragment>
-            )
-          )}
-      </div>
-      {!isLoading && theaterList.length === 0 && (
+      {!isLoading && viewTheaterList.length === 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>No Theater Available</CardTitle>
+            <CardTitle>No Theater to view</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs">Why don't you create one? ☝️</p>
